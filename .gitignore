@@ -1,4 +1,7 @@
+kernel/coreOS.kernel
+coreOS.iso
 isodir/
 sysroot/
 old-kernel/
 *.o
+*.a

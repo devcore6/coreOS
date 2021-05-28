@@ -16,7 +16,7 @@ extern "C" {
 		}
 	}
 
-		__attribute__((interrupt)) void double_fault(struct interrupt_frame* frame) {
+	__attribute__((interrupt)) void double_fault(struct interrupt_frame* frame) {
 		if(__this_thread == nullptr) { // page fault in kernel
 			vga_initialize();
 			uint32_t eax, ebx, ecx, edx, esi, edi, esp, ebp, cr0, cr2, cr3, cr4;

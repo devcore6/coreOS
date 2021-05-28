@@ -2075,7 +2075,7 @@ boot_page_directory:
 
    section .text
 align 4
-MultiBootHeader:
+multi_boot_header:
 	dd MAGIC
 	dd FLAGS
 	dd CHECKSUM
@@ -2087,10 +2087,10 @@ _loader:
 	mov ecx, cr0
 	or ecx, 0x80000001
 	mov cr0, ecx
-	lea ecx, [StartInHigherHalf]
+	lea ecx, [start_in_higher_half]
 	jmp ecx
 
-StartInHigherHalf:
+start_in_higher_half:
 	; mov dword [boot_page_directory], 0 				; We should probably invalidate the boot page now that we're in the higher half, but for some reason the PIT
 	; invlpg [0]										; timer values are still pointing to the original addresses, instead of the higher half paged ones. I will fix
 														; that later.
@@ -2098,12 +2098,12 @@ StartInHigherHalf:
 	push eax
 	push ebx
 	extern load_gdt
-    call load_gdt
-    extern idt_init
+	call load_gdt
+	extern idt_init
 	call idt_init
 	mov ebx, 1
-	extern init_PIT
-	call init_PIT
+	extern init_pit
+	call init_pit
 	call  _main
 _loop:
 	hlt
