@@ -1,0 +1,4 @@
+isodir/
+sysroot/
+old-kernel/
+*.o

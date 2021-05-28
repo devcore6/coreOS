@@ -1,0 +1,587 @@
+/* 
+ * The Koreh-v1 Project
+ * Koreh-v1 C/C++ Compiler (ccxx)
+ * 
+ * Copyright (C) 2021, Bryan "/dev/core" M.
+ * Licensed under the Mozilla Public License 2.0
+ * https://www.mozilla.org/en-US/MPL/2.0/
+ * 
+ * Strings library definitions as defined in
+ * Clauses 21.2 and 21.3 of the ISO-C++23 working draft.
+ * 
+ * The ISO documents referenced by this compiler can be found at
+ * http://open-std.org/JTC1/SC22/WG21/docs/papers/2020/n4878.pdf (C++23 Working Draft)
+ * http://open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf (C2x Working Draft)
+ * 
+ */
+
+// this file is just a synopsis for now
+// do not include this
+// it doesnt actually do anything other than throw compilation errors as its not finished
+#error <string> has not yet been implemented!
+
+#ifndef __LIBCPP_STRING
+# define __LIBCPP_STRING
+
+# include <config>
+
+# include <ios>			// std::streamoff, std::streampos
+# include <istream>		// std::basic_istream
+# include <ostream>		// std::basic_ostream
+# include <cwchar>		// std::mbstate_t
+# include <functional>	// std::hash
+
+__BEGIN_NAMESPACE_STD
+
+	template<> struct char_traits<char> {
+		using char_type = char;
+		using int_type = int;
+		using off_type = streamoff;
+		using pos_type = streampos;
+		using state_type = mbstate_t;
+		using comparison_category = strong_ordering;
+		static __HAS_CONSTEXPR__ void assign(char_type& c1, const char_type& c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool lt(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int compare(const char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ size_t length(const char_type* s);
+		static __HAS_CONSTEXPR__ const char_type* find(const char_type* s, size_t n,
+		const char_type& a);
+		static __HAS_CONSTEXPR__ char_type* move(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* copy(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* assign(char_type* s, size_t n, char_type a);
+		static __HAS_CONSTEXPR__ int_type not_eof(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ char_type to_char_type(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type to_int_type(char_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq_int_type(int_type c1, int_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type eof() __HAS_NOEXCEPT__;
+	};
+
+	template<> struct char_traits<char8_t> {
+		using char_type = char8_t;
+		using int_type = unsigned int;
+		using off_type = streamoff;
+		using pos_type = u8streampos;
+		using state_type = mbstate_t;
+		using comparison_category = strong_ordering;
+		static __HAS_CONSTEXPR__ void assign(char_type& c1, const char_type& c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool lt(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int compare(const char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ size_t length(const char_type* s);
+		static __HAS_CONSTEXPR__ const char_type* find(const char_type* s, size_t n,
+		const char_type& a);
+		static __HAS_CONSTEXPR__ char_type* move(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* copy(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* assign(char_type* s, size_t n, char_type a);
+		static __HAS_CONSTEXPR__ int_type not_eof(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ char_type to_char_type(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type to_int_type(char_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq_int_type(int_type c1, int_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type eof() __HAS_NOEXCEPT__;
+	};
+
+	template<> struct char_traits<char16_t> {
+		using char_type = char16_t;
+		using int_type = uint_least16_t;
+		using off_type = streamoff;
+		using pos_type = u16streampos;
+		using state_type = mbstate_t;
+		using comparison_category = strong_ordering;
+		static __HAS_CONSTEXPR__ void assign(char_type& c1, const char_type& c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool lt(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int compare(const char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ size_t length(const char_type* s);
+		static __HAS_CONSTEXPR__ const char_type* find(const char_type* s, size_t n,
+		const char_type& a);
+		static __HAS_CONSTEXPR__ char_type* move(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* copy(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* assign(char_type* s, size_t n, char_type a);
+		static __HAS_CONSTEXPR__ int_type not_eof(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ char_type to_char_type(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type to_int_type(char_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq_int_type(int_type c1, int_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type eof() __HAS_NOEXCEPT__;
+	};
+
+	template<> struct char_traits<char32_t> {
+		using char_type = char32_t;
+		using int_type = uint_least32_t;
+		using off_type = streamoff;
+		using pos_type = u32streampos;
+		using state_type = mbstate_t;
+		using comparison_category = strong_ordering;
+		static __HAS_CONSTEXPR__ void assign(char_type& c1, const char_type& c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool lt(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int compare(const char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ size_t length(const char_type* s);
+		static __HAS_CONSTEXPR__ const char_type* find(const char_type* s, size_t n,
+		const char_type& a);
+		static __HAS_CONSTEXPR__ char_type* move(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* copy(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* assign(char_type* s, size_t n, char_type a);
+		static __HAS_CONSTEXPR__ int_type not_eof(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ char_type to_char_type(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type to_int_type(char_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq_int_type(int_type c1, int_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type eof() __HAS_NOEXCEPT__;
+	};
+
+	template<> struct char_traits<wchar_t> {
+		using char_type = wchar_t;
+		using int_type = wint_t;
+		using off_type = streamoff;
+		using pos_type = wstreampos;
+		using state_type = mbstate_t;
+		using comparison_category = strong_ordering;
+		static __HAS_CONSTEXPR__ void assign(char_type& c1, const char_type& c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool lt(char_type c1, char_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int compare(const char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ size_t length(const char_type* s);
+		static __HAS_CONSTEXPR__ const char_type* find(const char_type* s, size_t n,
+		const char_type& a);
+		static __HAS_CONSTEXPR__ char_type* move(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* copy(char_type* s1, const char_type* s2, size_t n);
+		static __HAS_CONSTEXPR__ char_type* assign(char_type* s, size_t n, char_type a);
+		static __HAS_CONSTEXPR__ int_type not_eof(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ char_type to_char_type(int_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type to_int_type(char_type c) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ bool eq_int_type(int_type c1, int_type c2) __HAS_NOEXCEPT__;
+		static __HAS_CONSTEXPR__ int_type eof() __HAS_NOEXCEPT__;
+	};
+
+	class basic_string {
+		public:
+
+		// types
+
+		using traits_type = traits;
+		using value_type = charT;
+		using allocator_type = Allocator;
+		using size_type = typename allocator_traits<Allocator>::size_type;
+		using difference_type = typename allocator_traits<Allocator>::difference_type;
+		using pointer = typename allocator_traits<Allocator>::pointer;
+		using const_pointer = typename allocator_traits<Allocator>::const_pointer;
+		using reference = value_type&;
+		using const_reference = const value_type&;
+		using iterator = implementation-defined ; // see 22.2
+		using const_iterator = implementation-defined ; // see 22.2
+		using reverse_iterator = std::reverse_iterator<iterator>;
+		using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+		static const size_type npos = -1;
+
+		// 21.3.3.3, construct/copy/destroy
+
+		__HAS_CONSTEXPR__ basic_string() __HAS_NOEXCEPTF__(__HAS_NOEXCEPTF__(Allocator())) : basic_string(Allocator()) { }
+		__HAS_CONSTEXPR__ explicit basic_string(const Allocator& a) __HAS_NOEXCEPT__;
+		__HAS_CONSTEXPR__ basic_string(const basic_string& str);
+		__HAS_CONSTEXPR__ basic_string(basic_string&& str) __HAS_NOEXCEPT__;
+		__HAS_CONSTEXPR__ basic_string(const basic_string& str, size_type pos,
+		const Allocator& a = Allocator());
+		__HAS_CONSTEXPR__ basic_string(const basic_string& str, size_type pos, size_type n,
+		const Allocator& a = Allocator());
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string(const T& t, size_type pos, size_type n,
+		const Allocator& a = Allocator());
+		template<class T>
+		__HAS_CONSTEXPR__ explicit basic_string(const T& t, const Allocator& a = Allocator());
+		__HAS_CONSTEXPR__ basic_string(const charT* s, size_type n, const Allocator& a = Allocator());
+		__HAS_CONSTEXPR__ basic_string(const charT* s, const Allocator& a = Allocator());
+		__HAS_CONSTEXPR__ basic_string(size_type n, charT c, const Allocator& a = Allocator());
+		template<class InputIterator>
+		__HAS_CONSTEXPR__ basic_string(InputIterator begin, InputIterator end,
+		const Allocator& a = Allocator());
+		__HAS_CONSTEXPR__ basic_string(initializer_list<charT>, const Allocator& = Allocator());
+		__HAS_CONSTEXPR__ basic_string(const basic_string&, const Allocator&);
+		__HAS_CONSTEXPR__ basic_string(basic_string&&, const Allocator&);
+		__HAS_CONSTEXPR__ ~basic_string();
+		__HAS_CONSTEXPR__ basic_string& operator=(const basic_string& str);
+		__HAS_CONSTEXPR__ basic_string& operator=(basic_string&& str)
+		__HAS_NOEXCEPTF__(allocator_traits<Allocator>::propagate_on_container_move_assignment::value ||
+		allocator_traits<Allocator>::is_always_equal::value);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& operator=(const T& t);
+		__HAS_CONSTEXPR__ basic_string& operator=(const charT* s);
+		__HAS_CONSTEXPR__ basic_string& operator=(charT c);
+		__HAS_CONSTEXPR__ basic_string& operator=(initializer_list<charT>);
+		
+		// 21.3.3.4, iterators
+
+		__HAS_CONSTEXPR__ iterator begin() __HAS_NOEXCEPT__;
+		__HAS_CONSTEXPR__ const_iterator begin() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ iterator end() __HAS_NOEXCEPT__;
+		__HAS_CONSTEXPR__ const_iterator end() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ reverse_iterator rbegin() __HAS_NOEXCEPT__;
+		__HAS_CONSTEXPR__ const_reverse_iterator rbegin() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ reverse_iterator rend() __HAS_NOEXCEPT__;
+		__HAS_CONSTEXPR__ const_reverse_iterator rend() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ const_iterator cbegin() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ const_iterator cend() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ const_reverse_iterator crbegin() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ const_reverse_iterator crend() __HAS_CONSTNOEXCEPT__;
+		
+		// 21.3.3.5, capacity
+
+		__HAS_CONSTEXPR__ size_type size() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ size_type length() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ size_type max_size() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ void resize(size_type n, charT c);
+		__HAS_CONSTEXPR__ void resize(size_type n);
+		__HAS_CONSTEXPR__ size_type capacity() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ void reserve(size_type res_arg);
+		__HAS_CONSTEXPR__ void shrink_to_fit();
+		__HAS_CONSTEXPR__ void clear() __HAS_NOEXCEPT__;
+		[[nodiscard]] __HAS_CONSTEXPR__ bool empty() __HAS_CONSTNOEXCEPT__;
+		
+		// 21.3.3.6, element access
+
+		__HAS_CONSTEXPR__ const_reference operator[](size_type pos) const;
+		__HAS_CONSTEXPR__ reference operator[](size_type pos);
+		__HAS_CONSTEXPR__ const_reference at(size_type n) const;
+		__HAS_CONSTEXPR__ reference at(size_type n);
+		__HAS_CONSTEXPR__ const charT& front() const;
+		__HAS_CONSTEXPR__ charT& front();
+		__HAS_CONSTEXPR__ const charT& back() const;
+		__HAS_CONSTEXPR__ charT& back();
+		
+		// 21.3.3.7, modifiers
+
+		__HAS_CONSTEXPR__ basic_string& operator+=(const basic_string& str);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& operator+=(const T& t);
+		__HAS_CONSTEXPR__ basic_string& operator+=(const charT* s);
+		__HAS_CONSTEXPR__ basic_string& operator+=(charT c);
+		__HAS_CONSTEXPR__ basic_string& operator+=(initializer_list<charT>);
+		__HAS_CONSTEXPR__ basic_string& append(const basic_string& str);
+		__HAS_CONSTEXPR__ basic_string& append(const basic_string& str, size_type pos, size_type n = npos);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& append(const T& t);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& append(const T& t, size_type pos, size_type n = npos);
+		__HAS_CONSTEXPR__ basic_string& append(const charT* s, size_type n);
+		__HAS_CONSTEXPR__ basic_string& append(const charT* s);
+		__HAS_CONSTEXPR__ basic_string& append(size_type n, charT c);
+		template<class InputIterator>
+		__HAS_CONSTEXPR__ basic_string& append(InputIterator first, InputIterator last);
+		__HAS_CONSTEXPR__ basic_string& append(initializer_list<charT>);
+		__HAS_CONSTEXPR__ void push_back(charT c);
+		__HAS_CONSTEXPR__ basic_string& assign(const basic_string& str);
+		__HAS_CONSTEXPR__ basic_string& assign(basic_string&& str)
+		__HAS_NOEXCEPTF__(allocator_traits<Allocator>::propagate_on_container_move_assignment::value ||
+		allocator_traits<Allocator>::is_always_equal::value);
+		__HAS_CONSTEXPR__ basic_string& assign(const basic_string& str, size_type pos, size_type n = npos);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& assign(const T& t);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& assign(const T& t, size_type pos, size_type n = npos);
+		__HAS_CONSTEXPR__ basic_string& assign(const charT* s, size_type n);
+		__HAS_CONSTEXPR__ basic_string& assign(const charT* s);
+		__HAS_CONSTEXPR__ basic_string& assign(size_type n, charT c);
+		template<class InputIterator>
+		__HAS_CONSTEXPR__ basic_string& assign(InputIterator first, InputIterator last);
+		__HAS_CONSTEXPR__ basic_string& assign(initializer_list<charT>);
+		__HAS_CONSTEXPR__ basic_string& insert(size_type pos, const basic_string& str);
+		__HAS_CONSTEXPR__ basic_string& insert(size_type pos1, const basic_string& str,
+		size_type pos2, size_type n = npos);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& insert(size_type pos, const T& t);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& insert(size_type pos1, const T& t,
+		size_type pos2, size_type n = npos);
+		__HAS_CONSTEXPR__ basic_string& insert(size_type pos, const charT* s, size_type n);
+		__HAS_CONSTEXPR__ basic_string& insert(size_type pos, const charT* s);
+		__HAS_CONSTEXPR__ basic_string& insert(size_type pos, size_type n, charT c);
+		__HAS_CONSTEXPR__ iterator insert(const_iterator p, charT c);
+		__HAS_CONSTEXPR__ iterator insert(const_iterator p, size_type n, charT c);
+		template<class InputIterator>
+		__HAS_CONSTEXPR__ iterator insert(const_iterator p, InputIterator first, InputIterator last);
+		__HAS_CONSTEXPR__ iterator insert(const_iterator p, initializer_list<charT>);
+		__HAS_CONSTEXPR__ basic_string& erase(size_type pos = 0, size_type n = npos);
+		__HAS_CONSTEXPR__ iterator erase(const_iterator p);
+		__HAS_CONSTEXPR__ iterator erase(const_iterator first, const_iterator last);
+		__HAS_CONSTEXPR__ void pop_back();
+		__HAS_CONSTEXPR__ basic_string& replace(size_type pos1, size_type n1, const basic_string& str);
+		__HAS_CONSTEXPR__ basic_string& replace(size_type pos1, size_type n1, const basic_string& str,
+		size_type pos2, size_type n2 = npos);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& replace(size_type pos1, size_type n1, const T& t);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& replace(size_type pos1, size_type n1, const T& t,
+		size_type pos2, size_type n2 = npos);
+		__HAS_CONSTEXPR__ basic_string& replace(size_type pos, size_type n1, const charT* s, size_type n2);
+		__HAS_CONSTEXPR__ basic_string& replace(size_type pos, size_type n1, const charT* s);
+		__HAS_CONSTEXPR__ basic_string& replace(size_type pos, size_type n1, size_type n2, charT c);
+		__HAS_CONSTEXPR__ basic_string& replace(const_iterator i1, const_iterator i2,
+		const basic_string& str);
+		template<class T>
+		__HAS_CONSTEXPR__ basic_string& replace(const_iterator i1, const_iterator i2, const T& t);
+		__HAS_CONSTEXPR__ basic_string& replace(const_iterator i1, const_iterator i2, const charT* s,
+		size_type n);
+		__HAS_CONSTEXPR__ basic_string& replace(const_iterator i1, const_iterator i2, const charT* s);
+		__HAS_CONSTEXPR__ basic_string& replace(const_iterator i1, const_iterator i2, size_type n, charT c);
+		template<class InputIterator>
+		__HAS_CONSTEXPR__ basic_string& replace(const_iterator i1, const_iterator i2,
+		InputIterator j1, InputIterator j2);
+		__HAS_CONSTEXPR__ basic_string& replace(const_iterator, const_iterator, initializer_list<charT>);
+		__HAS_CONSTEXPR__ size_type copy(charT* s, size_type n, size_type pos = 0) const;
+		__HAS_CONSTEXPR__ void swap(basic_string& str)
+		__HAS_NOEXCEPTF__(allocator_traits<Allocator>::propagate_on_container_swap::value ||
+		allocator_traits<Allocator>::is_always_equal::value);
+		
+		// 21.3.3.8, string operations
+
+		__HAS_CONSTEXPR__ const charT* c_str() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ const charT* data() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ charT* data() __HAS_NOEXCEPT__;
+		__HAS_CONSTEXPR__ operator basic_string_view<charT, traits>() __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ allocator_type get_allocator() __HAS_CONSTNOEXCEPT__;
+		template<class T>
+		__HAS_CONSTEXPR__ size_type find(const T& t, size_type pos = 0) const __HAS_NOEXCEPTF__();
+		__HAS_CONSTEXPR__ size_type find(const basic_string& str, size_type pos = 0) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ size_type find(const charT* s, size_type pos, size_type n) const;
+		__HAS_CONSTEXPR__ size_type find(const charT* s, size_type pos = 0) const;
+		__HAS_CONSTEXPR__ size_type find(charT c, size_type pos = 0) __HAS_CONSTNOEXCEPT__;
+		template<class T>
+		__HAS_CONSTEXPR__ size_type rfind(const T& t, size_type pos = npos) const __HAS_NOEXCEPTF__();
+		__HAS_CONSTEXPR__ size_type rfind(const basic_string& str, size_type pos = npos) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ size_type rfind(const charT* s, size_type pos, size_type n) const;
+		__HAS_CONSTEXPR__ size_type rfind(const charT* s, size_type pos = npos) const;
+		__HAS_CONSTEXPR__ size_type rfind(charT c, size_type pos = npos) __HAS_CONSTNOEXCEPT__;
+		template<class T>
+		__HAS_CONSTEXPR__ size_type find_first_of(const T& t, size_type pos = 0) const __HAS_NOEXCEPTF__();
+		__HAS_CONSTEXPR__ size_type find_first_of(const basic_string& str, size_type pos = 0) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ size_type find_first_of(const charT* s, size_type pos, size_type n) const;
+		__HAS_CONSTEXPR__ size_type find_first_of(const charT* s, size_type pos = 0) const;
+		__HAS_CONSTEXPR__ size_type find_first_of(charT c, size_type pos = 0) __HAS_CONSTNOEXCEPT__;
+		template<class T>
+		__HAS_CONSTEXPR__ size_type find_last_of(const T& t,
+		size_type pos = npos) const __HAS_NOEXCEPTF__();
+		__HAS_CONSTEXPR__ size_type find_last_of(const basic_string& str,
+		size_type pos = npos) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ size_type find_last_of(const charT* s, size_type pos, size_type n) const;
+		__HAS_CONSTEXPR__ size_type find_last_of(const charT* s, size_type pos = npos) const;
+		__HAS_CONSTEXPR__ size_type find_last_of(charT c, size_type pos = npos) __HAS_CONSTNOEXCEPT__;
+		template<class T>
+		__HAS_CONSTEXPR__ size_type find_first_not_of(const T& t,
+		size_type pos = 0) const __HAS_NOEXCEPTF__();
+		__HAS_CONSTEXPR__ size_type find_first_not_of(const basic_string& str,
+		size_type pos = 0) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ size_type find_first_not_of(const charT* s, size_type pos, size_type n) const;
+		__HAS_CONSTEXPR__ size_type find_first_not_of(const charT* s, size_type pos = 0) const;
+		__HAS_CONSTEXPR__ size_type find_first_not_of(charT c, size_type pos = 0) __HAS_CONSTNOEXCEPT__;
+		template<class T>
+		__HAS_CONSTEXPR__ size_type find_last_not_of(const T& t,
+		size_type pos = npos) const __HAS_NOEXCEPTF__();
+		__HAS_CONSTEXPR__ size_type find_last_not_of(const basic_string& str,
+		size_type pos = npos) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ size_type find_last_not_of(const charT* s, size_type pos, size_type n) const;
+		__HAS_CONSTEXPR__ size_type find_last_not_of(const charT* s, size_type pos = npos) const;
+		__HAS_CONSTEXPR__ size_type find_last_not_of(charT c, size_type pos = npos) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ basic_string substr(size_type pos = 0, size_type n = npos) const;
+		template<class T>
+		__HAS_CONSTEXPR__ int compare(const T& t) const __HAS_NOEXCEPTF__();
+		template<class T>
+		__HAS_CONSTEXPR__ int compare(size_type pos1, size_type n1, const T& t) const;
+		template<class T>
+		__HAS_CONSTEXPR__ int compare(size_type pos1, size_type n1, const T& t,
+		size_type pos2, size_type n2 = npos) const;
+		__HAS_CONSTEXPR__ int compare(const basic_string& str) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ int compare(size_type pos1, size_type n1, const basic_string& str) const;
+		__HAS_CONSTEXPR__ int compare(size_type pos1, size_type n1, const basic_string& str,
+		size_type pos2, size_type n2 = npos) const;
+		__HAS_CONSTEXPR__ int compare(const charT* s) const;
+		__HAS_CONSTEXPR__ int compare(size_type pos1, size_type n1, const charT* s) const;
+		__HAS_CONSTEXPR__ int compare(size_type pos1, size_type n1, const charT* s, size_type n2) const;
+		__HAS_CONSTEXPR__ bool starts_with(basic_string_view<charT, traits> x) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ bool starts_with(charT x) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ bool starts_with(const charT* x) const;
+		__HAS_CONSTEXPR__ bool ends_with(basic_string_view<charT, traits> x) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ bool ends_with(charT x) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ bool ends_with(const charT* x) const;
+		__HAS_CONSTEXPR__ bool contains(basic_string_view<charT, traits> x) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ bool contains(charT x) __HAS_CONSTNOEXCEPT__;
+		__HAS_CONSTEXPR__ bool contains(const charT* x) const;
+	};
+
+	template<class InputIterator, class Allocator = allocator<typename iterator_traits<InputIterator>::value_type>>
+		basic_string(InputIterator, InputIterator, Allocator = Allocator()) 
+		-> basic_string<typename iterator_traits<InputIterator>::value_type, char_traits<typename iterator_traits<InputIterator>::value_type>, Allocator>;
+
+	template<class charT, class traits,	class Allocator = allocator<charT>>
+		explicit basic_string(basic_string_view<charT, traits>, const Allocator& = Allocator())
+		-> basic_string<charT, traits, Allocator>;
+
+
+	template<class charT, class traits,	class Allocator = allocator<charT>>
+		basic_string(basic_string_view<charT, traits>, typename ::size_type, typename ::size_type, const Allocator& = Allocator())
+			-> basic_string<charT, traits, Allocator>;
+
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(const basic_string<charT, traits, Allocator>& lhs,
+			const basic_string<charT, traits, Allocator>& rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(basic_string<charT, traits, Allocator>&& lhs,
+			const basic_string<charT, traits, Allocator>& rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(const basic_string<charT, traits, Allocator>& lhs,
+			basic_string<charT, traits, Allocator>&& rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(basic_string<charT, traits, Allocator>&& lhs,
+			basic_string<charT, traits, Allocator>&& rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(const charT* lhs,
+			const basic_string<charT, traits, Allocator>& rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(const charT* lhs,
+			basic_string<charT, traits, Allocator>&& rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(charT lhs,
+			const basic_string<charT, traits, Allocator>& rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(charT lhs,
+			basic_string<charT, traits, Allocator>&& rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(const basic_string<charT, traits, Allocator>& lhs,
+			const charT* rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(basic_string<charT, traits, Allocator>&& lhs,
+			const charT* rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(const basic_string<charT, traits, Allocator>& lhs,
+			charT rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ basic_string<charT, traits, Allocator> operator+(basic_string<charT, traits, Allocator>&& lhs,
+			charT rhs);
+
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ bool operator==(const basic_string<charT, traits, Allocator>& lhs,
+			const basic_string<charT, traits, Allocator>& rhs) __HAS_NOEXCEPT__;
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ bool operator==(const basic_string<charT, traits, Allocator>& lhs,
+			const charT* rhs);
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ operator<=>(const basic_string<charT, traits, Allocator>& lhs,
+			const basic_string<charT, traits, Allocator>& rhs) __HAS_NOEXCEPT__;
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ operator<=>(const basic_string<charT, traits, Allocator>& lhs,
+			const charT* rhs);
+
+	// 21.3.4.3, swap
+	template<class charT, class traits, class Allocator>
+		extern __HAS_CONSTEXPR__ void swap(basic_string<charT, traits, Allocator>& lhs,
+			basic_string<charT, traits, Allocator>& rhs) __HAS_NOEXCEPTF__(__HAS_NOEXCEPTF__(lhs.swap(rhs)));
+
+	// 21.3.4.4, inserters and extractors
+	template<class charT, class traits, class Allocator>
+		extern basic_istream<charT, traits>& operator>>(basic_istream<charT, traits>& is,
+			basic_string<charT, traits, Allocator>& str);
+
+	template<class charT, class traits, class Allocator>
+		extern basic_ostream<charT, traits>& operator<<(basic_ostream<charT, traits>& os,
+			const basic_string<charT, traits, Allocator>& str);
+	template<class charT, class traits, class Allocator>
+		extern basic_istream<charT, traits>& getline(basic_istream<charT, traits>& is,
+			basic_string<charT, traits, Allocator>& str, charT delim);
+	template<class charT, class traits, class Allocator>
+		extern basic_istream<charT, traits>& getline(basic_istream<charT, traits>&& is,
+			basic_string<charT, traits, Allocator>& str, charT delim);
+	template<class charT, class traits, class Allocator>
+		extern basic_istream<charT, traits>& getline(basic_istream<charT, traits>& is,
+			basic_string<charT, traits, Allocator>& str);
+	template<class charT, class traits, class Allocator>
+		extern basic_istream<charT, traits>&
+			getline(basic_istream<charT, traits>&& is, basic_string<charT, traits, Allocator>& str);
+
+	// 21.3.4.5, erasure
+
+	template<class charT, class traits, class Allocator, class U>
+		__HAS_CONSTEXPR__ typename basic_string<charT, traits, Allocator>::size_type erase(basic_string<charT, traits, Allocator>& c, const U& value);
+	template<class charT, class traits, class Allocator, class Predicate>
+		__HAS_CONSTEXPR__ typename basic_string<charT, traits, Allocator>::size_type erase_if(basic_string<charT, traits, Allocator>& c, Predicate pred);
+
+	// basic_string typedef names
+
+	using string = basic_string<char>;
+	using u8string = basic_string<char8_t>;
+	using u16string = basic_string<char16_t>;
+	using u32string = basic_string<char32_t>;
+	using wstring = basic_string<wchar_t>;
+
+	// 21.3.5, numeric conversions
+
+	extern int stoi(const string& str, size_t* idx = nullptr, int base = 10);
+	extern long stol(const string& str, size_t* idx = nullptr, int base = 10);
+	extern unsigned long stoul(const string& str, size_t* idx = nullptr, int base = 10);
+	extern long long stoll(const string& str, size_t* idx = nullptr, int base = 10);
+	extern unsigned long long stoull(const string& str, size_t* idx = nullptr, int base = 10);
+	extern float stof(const string& str, size_t* idx = nullptr);
+	extern double stod(const string& str, size_t* idx = nullptr);
+	extern long double stold(const string& str, size_t* idx = nullptr);
+	extern string to_string(int val);
+	extern string to_string(unsigned val);
+	extern string to_string(long val);
+	extern string to_string(unsigned long val);
+	extern string to_string(long long val);
+	extern string to_string(unsigned long long val);
+	extern string to_string(float val);
+	extern string to_string(double val);
+	extern string to_string(long double val);
+	extern int stoi(const wstring& str, size_t* idx = nullptr, int base = 10);
+	extern long stol(const wstring& str, size_t* idx = nullptr, int base = 10);
+	extern unsigned long stoul(const wstring& str, size_t* idx = nullptr, int base = 10);
+	extern long long stoll(const wstring& str, size_t* idx = nullptr, int base = 10);
+	extern unsigned long long stoull(const wstring& str, size_t* idx = nullptr, int base = 10);
+	extern float stof(const wstring& str, size_t* idx = nullptr);
+	extern double stod(const wstring& str, size_t* idx = nullptr);
+	extern long double stold(const wstring& str, size_t* idx = nullptr);
+	extern wstring to_wstring(int val);
+	extern wstring to_wstring(unsigned val);
+	extern wstring to_wstring(long val);
+	extern wstring to_wstring(unsigned long val);
+	extern wstring to_wstring(long long val);
+	extern wstring to_wstring(unsigned long long val);
+	extern wstring to_wstring(float val);
+	extern wstring to_wstring(double val);
+	extern wstring to_wstring(long double val);
+
+	namespace pmr {
+		template<class charT, class traits = char_traits<charT>>
+		using basic_string = std::basic_string<charT, traits, polymorphic_allocator<charT>>;
+		using string = basic_string<char>;
+		using u8string = basic_string<char8_t>;
+		using u16string = basic_string<char16_t>;
+		using u32string = basic_string<char32_t>;
+		using wstring = basic_string<wchar_t>;
+	}
+
+	// 21.3.6, hash support
+
+	template<class T> struct hash;
+	template<> struct hash<string>;
+	template<> struct hash<u8string>;
+	template<> struct hash<u16string>;
+	template<> struct hash<u32string>;
+	template<> struct hash<wstring>;
+	template<> struct hash<pmr::string>;
+	template<> struct hash<pmr::u8string>;
+	template<> struct hash<pmr::u16string>;
+	template<> struct hash<pmr::u32string>;
+	template<> struct hash<pmr::wstring>;
+
+	inline namespace literals {
+		inline namespace string_literals {
+		// 21.3.7, suffix for basic_string literals
+		__HAS_CONSTEXPR__ string operator""s(const char* str, size_t len);
+		__HAS_CONSTEXPR__ u8string operator""s(const char8_t* str, size_t len);
+		__HAS_CONSTEXPR__ u16string operator""s(const char16_t* str, size_t len);
+		__HAS_CONSTEXPR__ u32string operator""s(const char32_t* str, size_t len);
+		__HAS_CONSTEXPR__ wstring operator""s(const wchar_t* str, size_t len);
+		}
+	}
+
+__END_NAMESPACE_STD
+
+#endif

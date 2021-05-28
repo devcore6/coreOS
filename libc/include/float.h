@@ -1,0 +1,67 @@
+/* 
+ * The Koreh-v1 Project
+ * Koreh-v1 C/C++ Compiler (ccxx)
+ * 
+ * Copyright (C) 2021, Bryan "/dev/core" M.
+ * Licensed under the Mozilla Public License 2.0
+ * https://www.mozilla.org/en-US/MPL/2.0/
+ * 
+ * Common language definitions as defined in
+ * Clause 7.7 of the ISO-C++23 working draft.
+ * 
+ * The ISO documents referenced by this compiler can be found at
+ * http://open-std.org/JTC1/SC22/WG21/docs/papers/2020/n4878.pdf (C++23 Working Draft)
+ * http://open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf (C2x Working Draft)
+ * 
+ */
+
+/* 
+ * synopsis:
+ * 
+ * #define FLT_ROUNDS
+ * #define FLT_EVAL_METHOD
+ * #define FLT_HAS_SUBNORM
+ * #define DBL_HAS_SUBNORM
+ * #define LDBL_HAS_SUBNORM
+ * #define FLT_RADIX
+ * #define FLT_MANT_DIG
+ * #define DBL_MANT_DIG
+ * #define LDBL_MANT_DIG
+ * #define FLT_DECIMAL_DIG
+ * #define DBL_DECIMAL_DIG
+ * #define LDBL_DECIMAL_DIG
+ * #define DECIMAL_DIG
+ * #define FLT_DIG
+ * #define DBL_DIG
+ * #define LDBL_DIG
+ * #define FLT_MIN_EXP
+ * #define DBL_MIN_EXP
+ * #define LDBL_MIN_EXP
+ * #define FLT_MIN_10_EXP
+ * #define DBL_MIN_10_EXP
+ * #define LDBL_MIN_10_EXP
+ * #define FLT_MAX_EXP
+ * #define DBL_MAX_EXP
+ * #define LDBL_MAX_EXP
+ * #define FLT_MAX_10_EXP
+ * #define DBL_MAX_10_EXP
+ * #define LDBL_MAX_10_EXP
+ * #define FLT_MAX
+ * #define DBL_MAX
+ * #define LDBL_MAX
+ * #define FLT_EPSILON
+ * #define DBL_EPSILON
+ * #define LDBL_EPSILON
+ * #define FLT_MIN
+ * #define DBL_MIN
+ * #define LDBL_MIN
+ * #define FLT_TRUE_MIN
+ * #define DBL_TRUE_MIN
+ * #define LDBL_TRUE_MIN
+ */
+
+#ifndef __LIBC_FLOAT_H
+# define __LIBC_FLOAT_H
+# include <config.h>
+
+#endif // __LIBC_FLOAT_H

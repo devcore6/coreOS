@@ -1,0 +1,115 @@
+/* 
+ * The Koreh-v1 Project
+ * Koreh-v1 C/C++ Compiler (ccxx)
+ * 
+ * Copyright (C) 2021, Bryan "/dev/core" M.
+ * Licensed under the Mozilla Public License 2.0
+ * https://www.mozilla.org/en-US/MPL/2.0/
+ * 
+ * Dynamic memory management as defined in
+ * Clause 17.6 of the ISO-C++23 working draft.
+ * 
+ * The ISO documents referenced by this compiler can be found at
+ * http://open-std.org/JTC1/SC22/WG21/docs/papers/2020/n4878.pdf (C++23 Working Draft)
+ * http://open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf (C2x Working Draft)
+ * 
+ */
+
+/*
+ * synopsis:
+ * 
+ * __BEGIN_NAMESPACE_STD
+ *     class bad_alloc;
+ *     class bad_array_new_length;
+ *     struct destroying_delete_t {
+ *         explicit destroying_delete_t() = default;
+ *     };
+ *     inline __HAS_CONSTEXPR__ destroying_delete_t destroying_delete{};
+ *     enum class align_val_t : size_t {};
+ *     struct nothrow_t { explicit nothrow_t() = default; };
+ *     extern const nothrow_t nothrow;
+ *     using new_handler = void (*)();
+ *     new_handler get_new_handler() __HAS_NOEXCEPT__;
+ *     new_handler set_new_handler(new_handler new_p) __HAS_NOEXCEPT__;
+ *     template<class T> __HAS_NODISCARD__ __HAS_CONSTEXPR__ T* launder(T* p) __HAS_NOEXCEPT__;
+ *     inline __HAS_CONSTEXPR__ size_t hardware_destructive_interference_size;
+ *     inline __HAS_CONSTEXPR__ size_t hardware_constructive_interference_size;
+ * __END_NAMESPACE_STD
+ * 
+ * __HAS_NODISCARD__ void* operator new(std::size_t size);
+ * __HAS_NODISCARD__ void* operator new(std::size_t size, std::align_val_t alignment);
+ * __HAS_NODISCARD__ void* operator new(std::size_t size, const std::nothrow_t&) __HAS_NOEXCEPT__;
+ * __HAS_NODISCARD__ void* operator new(std::size_t size, std::align_val_t alignment, const std::nothrow_t&) __HAS_NOEXCEPT__;
+ * void operator delete(void* ptr) __HAS_NOEXCEPT__;
+ * void operator delete(void* ptr, std::size_t size) __HAS_NOEXCEPT__;
+ * void operator delete(void* ptr, std::align_val_t alignment) __HAS_NOEXCEPT__;
+ * void operator delete(void* ptr, std::size_t size, std::align_val_t alignment) __HAS_NOEXCEPT__;
+ * void operator delete(void* ptr, const std::nothrow_t&) __HAS_NOEXCEPT__;
+ * void operator delete(void* ptr, std::align_val_t alignment, const std::nothrow_t&) __HAS_NOEXCEPT__;
+ * __HAS_NODISCARD__ void* operator new[](std::size_t size);
+ * __HAS_NODISCARD__ void* operator new[](std::size_t size, std::align_val_t alignment);
+ * __HAS_NODISCARD__ void* operator new[](std::size_t size, const std::nothrow_t&) __HAS_NOEXCEPT__;
+ * __HAS_NODISCARD__ void* operator new[](std::size_t size, std::align_val_t alignment,
+ * const std::nothrow_t&) __HAS_NOEXCEPT__;
+ * void operator delete[](void* ptr) __HAS_NOEXCEPT__;
+ * void operator delete[](void* ptr, std::size_t size) __HAS_NOEXCEPT__;
+ * void operator delete[](void* ptr, std::align_val_t alignment) __HAS_NOEXCEPT__;
+ * void operator delete[](void* ptr, std::size_t size, std::align_val_t alignment) __HAS_NOEXCEPT__;
+ * void operator delete[](void* ptr, const std::nothrow_t&) __HAS_NOEXCEPT__;
+ * void operator delete[](void* ptr, std::align_val_t alignment, const std::nothrow_t&) __HAS_NOEXCEPT__;
+ * __HAS_NODISCARD__ void* operator new (std::size_t size, void* ptr) __HAS_NOEXCEPT__;
+ * __HAS_NODISCARD__ void* operator new[](std::size_t size, void* ptr) __HAS_NOEXCEPT__;
+ * void operator delete (void* ptr, void*) __HAS_NOEXCEPT__;
+ * void operator delete[](void* ptr, void*) __HAS_NOEXCEPT__;
+ * 
+ */
+
+#ifndef __LIBCPP_NEW
+# define __LIBCPP_NEW
+# include <config>
+# include <cstddef>
+
+/*__BEGIN_NAMESPACE_STD
+	class bad_alloc;
+	class bad_array_new_length;
+	struct destroying_delete_t {
+		explicit destroying_delete_t() = default;
+	};
+	inline __HAS_CONSTEXPR__ destroying_delete_t destroying_delete{};
+	enum class align_val_t : size_t {};
+	struct nothrow_t { explicit nothrow_t() = default; };
+	extern const nothrow_t nothrow;
+	using new_handler = void (*)();
+	new_handler get_new_handler() __HAS_NOEXCEPT__;
+	new_handler set_new_handler(new_handler new_p) __HAS_NOEXCEPT__;
+	template<class T> __HAS_NODISCARD__ __HAS_CONSTEXPR__ T* launder(T* p) __HAS_NOEXCEPT__;
+	// inline __HAS_CONSTEXPR__ size_t hardware_destructive_interference_size = implementation-defined ;
+	// inline __HAS_CONSTEXPR__ size_t hardware_constructive_interference_size = implementation-defined ;
+__END_NAMESPACE_STD*/
+
+__HAS_NODISCARD__ void* operator new(std::size_t size);
+/*__HAS_NODISCARD__ void* operator new(std::size_t size, std::align_val_t alignment);
+__HAS_NODISCARD__ void* operator new(std::size_t size, const std::nothrow_t&) __HAS_NOEXCEPT__;
+__HAS_NODISCARD__ void* operator new(std::size_t size, std::align_val_t alignment, const std::nothrow_t&) __HAS_NOEXCEPT__;*/
+void operator delete(void* ptr) __HAS_NOEXCEPT__;
+void operator delete(void* ptr, std::size_t size) __HAS_NOEXCEPT__;
+/*void operator delete(void* ptr, std::align_val_t alignment) __HAS_NOEXCEPT__;
+void operator delete(void* ptr, std::size_t size, std::align_val_t alignment) __HAS_NOEXCEPT__;
+void operator delete(void* ptr, const std::nothrow_t&) __HAS_NOEXCEPT__;
+void operator delete(void* ptr, std::align_val_t alignment, const std::nothrow_t&) __HAS_NOEXCEPT__;*/
+__HAS_NODISCARD__ void* operator new[](std::size_t size);
+/*__HAS_NODISCARD__ void* operator new[](std::size_t size, std::align_val_t alignment);
+__HAS_NODISCARD__ void* operator new[](std::size_t size, const std::nothrow_t&) __HAS_NOEXCEPT__;
+__HAS_NODISCARD__ void* operator new[](std::size_t size, std::align_val_t alignment, const std::nothrow_t&) __HAS_NOEXCEPT__;*/
+void operator delete[](void* ptr) __HAS_NOEXCEPT__;
+void operator delete[](void* ptr, std::size_t size) __HAS_NOEXCEPT__;
+/*void operator delete[](void* ptr, std::align_val_t alignment) __HAS_NOEXCEPT__;
+void operator delete[](void* ptr, std::size_t size, std::align_val_t alignment) __HAS_NOEXCEPT__;
+void operator delete[](void* ptr, const std::nothrow_t&) __HAS_NOEXCEPT__;
+void operator delete[](void* ptr, std::align_val_t alignment, const std::nothrow_t&) __HAS_NOEXCEPT__;
+__HAS_NODISCARD__ void* operator new (std::size_t size, void* ptr) __HAS_NOEXCEPT__;
+__HAS_NODISCARD__ void* operator new[](std::size_t size, void* ptr) __HAS_NOEXCEPT__;
+void operator delete (void* ptr, void*) __HAS_NOEXCEPT__;
+void operator delete[](void* ptr, void*) __HAS_NOEXCEPT__;*/
+
+#endif

@@ -1,0 +1,258 @@
+/* 
+ * The Koreh-v1 Project
+ * Koreh-v1 C/C++ Compiler (ccxx)
+ * 
+ * Copyright (C) 2021, Bryan "/dev/core" M.
+ * Licensed under the Mozilla Public License 2.0
+ * https://www.mozilla.org/en-US/MPL/2.0/
+ * 
+ * Common language definitions as defined in
+ * Clause 17.2 of the ISO-C++23 working draft.
+ * 
+ * Matching source files: language-support/cstdlib/abort.cpp
+ *                        language-support/cstdlib/memory.cpp
+ *                        language-support/cstdlib/string.cpp
+ *                        language-support/cstdlib/cstdlib.cpp
+ *                        language-support/cstdlib/math.cpp
+ * 
+ * The ISO documents referenced by this compiler can be found at
+ * http://open-std.org/JTC1/SC22/WG21/docs/papers/2020/n4878.pdf (C++23 Working Draft)
+ * http://open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf (C2x Working Draft)
+ * 
+ */
+
+/* 
+ * synopsis:
+ * 
+ * __BEGIN_NAMESPACE_STD
+ * 
+ * #if __ARCH == 64
+ * using size_t = unsigned long long;
+ * #else
+ * using size_t = unsigned long;
+ * #endif
+ * using div_t = struct;
+ * using ldiv_t = struct;
+ * #if __ARCH == 64
+ * using lldiv_t = struct;
+ * #endif
+ * 
+ * __END_NAMESPACE_STD
+ * 
+ * #define NULL
+ * #define EXIT_FAILURE
+ * #define EXIT_SUCCESS
+ * #define RAND_MAX
+ * #define MB_CUR_MAX
+ * 
+ * __BEGIN_NAMESPACE_STD
+ * 
+ * [[noreturn]] void abort() noexcept;
+ * int atexit(void (*func)()) noexcept;
+ * int at_quick_exit(void (*func)()) noexcept;
+ * [[noreturn]] void exit(int status);
+ * [[noreturn]] void _Exit(int status) noexcept;
+ * [[noreturn]] void quick_exit(int status) noexcept;
+ * char* getenv(const char* name);
+ * int system(const char* string);
+ * 
+ * void* aligned_alloc(size_t alignment, size_t size);
+ * void* calloc(size_t nmemb, size_t size);
+ * void free(void* ptr);
+ * void* malloc(size_t size);
+ * void* realloc(void* ptr, size_t size);
+ * double atof(const char* nptr);
+ * int atoi(const char* nptr);
+ * long int atol(const char* nptr);
+ * #if __ARCH == 64 && __cplusplus >= 201103L
+ * long long int atoll(const char* nptr);
+ * #endif
+ * double strtod(const char* nptr, char** endptr);
+ * float strtof(const char* nptr, char** endptr);
+ * long double strtold(const char* nptr, char** endptr);
+ * long int strtol(const char* nptr, char** endptr, int base);
+ * #if __ARCH == 64 && __cplusplus >= 201103L
+ * long long int strtoll(const char* nptr, char** endptr, int base);
+ * #endif
+ * unsigned long int strtoul(const char* nptr, char** endptr, int base);
+ * #if __ARCH == 64 && __cplusplus >= 201103L
+ * unsigned long long int strtoull(const char* nptr, char** endptr, int base);
+ * #endif
+ * 
+ * int mblen(const char* s, size_t n);
+ * int mbtowc(wchar_t* pwc, const char* s, size_t n);
+ * int wctomb(char* s, wchar_t wchar);
+ * size_t mbstowcs(wchar_t* pwcs, const char* s, size_t n);
+ * size_t wcstombs(char* s, const wchar_t* pwcs, size_t n);
+ * 
+ * void* bsearch(const void* key, const void* base, size_t nmemb, size_t size, int (*compar)(const void*, const void*));
+ * void qsort(void* base, size_t nmemb, size_t size, int (*compar)(const void*, const void*));
+ * 
+ * int rand();
+ * void srand(unsigned int seed);
+ * 
+ * int abs(int j);
+ * long int abs(long int j);
+ * long long int abs(long long int j);
+ * float abs(float j);
+ * double abs(double j);
+ * long double abs(long double j);
+ * long int labs(long int j);
+ * #if __ARCH == 64
+ * long long int llabs(long long int j);
+ * endif
+ * div_t div(int numer, int denom);
+ * ldiv_t div(long int numer, long int denom);
+ * #if __ARCH == 64
+ * lldiv_t div(long long int numer, long long int denom);
+ * #endif
+ * ldiv_t ldiv(long int numer, long int denom);
+ * #if __ARCH == 64
+ * lldiv_t lldiv(long long int numer, long long int denom);
+ * #endif
+ * 
+ * __END_NAMESPACE_STD
+ * 
+ */
+
+#ifndef __LIBCPP_CSTDLIB
+# define __LIBCPP_CSTDLIB
+
+# include <config>
+
+__BEGIN_NAMESPACE_STD
+
+# if __ARCH == 64
+#  ifdef __LP64__
+    using size_t = unsigned long;
+#  else
+    using size_t = unsigned long long;
+#  endif
+# else
+    using size_t = unsigned long;
+# endif // __ARCH == 64
+
+	using div_t = struct {
+		int quot;
+		int rem;
+	};
+	using ldiv_t = struct {
+		long quot;
+		long rem;
+	};
+
+# if __ARCH == 64
+	using lldiv_t = struct {
+		long long quot;
+		long long rem;
+	};
+# endif // __ARCH == 64
+
+__END_NAMESPACE_STD
+
+/*
+ * Clause 17.2.3 paragraph 2 defines NULL as a macro to a
+ * null pointer constant
+ */
+# ifndef NULL
+#  ifdef __cplusplus
+#   define NULL nullptr
+#  else
+#   define NULL (void*)0
+#  endif // __cplusplus
+# endif // NULL
+
+# ifdef EXIT_FAILURE
+#  undef EXIT_FAILURE
+# endif // EXIT_FAILURE
+# define EXIT_FAILURE -1
+# ifdef EXIT_SUCCESS
+#  undef EXIT_SUCCESS
+# endif // EXIT_SUCCESS
+# define EXIT_SUCCESS 0
+# if __ARCH == 64
+#  define RAND_MAX 9223372036854775807
+# else
+#  define RAND_MAX 2147483647
+# endif // __ARCH == 64
+# ifndef MB_CUR_MAX
+#  define MB_CUR_MAX 4
+# endif // MB_CUR_MAX
+
+extern "C" {
+#include <stdlib.h>
+}
+
+__BEGIN_NAMESPACE_STD
+
+	__HAS_NORETURN__ void abort() __HAS_NOEXCEPT__;
+	extern int atexit(void (*func)()) __HAS_NOEXCEPT__;
+	extern int at_quick_exit(void (*func)()) __HAS_NOEXCEPT__;
+	__HAS_NORETURN__ void exit(int status);
+	__HAS_NORETURN__ void _Exit(int status) __HAS_NOEXCEPT__;
+	__HAS_NORETURN__ void quick_exit(int status) __HAS_NOEXCEPT__;
+
+	/* 
+	 * todo: implement these whenever the kernel is a thing
+	 */
+	extern char* getenv(const char* name);
+	extern int system(const char* string);
+
+	extern void* aligned_alloc(size_t alignment, size_t size);
+	extern void* calloc(size_t nmemb, size_t size);
+	using ::free;
+	using ::malloc;
+	using ::realloc;
+	extern double atof(const char* nptr);
+	extern int atoi(const char* nptr);
+	extern long int atol(const char* nptr);
+# if __ARCH == 64 && __cplusplus >= 201103L
+	extern long long int atoll(const char* nptr);
+# endif // __ARCH == 64 && __cplusplus >= 201103L
+	extern double strtod(const char* nptr, char** endptr);
+	extern float strtof(const char* nptr, char** endptr);
+	extern long double strtold(const char* nptr, char** endptr);
+	extern long int strtol(const char* nptr, char** endptr, int base);
+# if __ARCH == 64 && __cplusplus >= 201103L
+	extern long long int strtoll(const char* nptr, char** endptr, int base);
+# endif // __ARCH == 64 && __cplusplus >= 201103L
+	extern unsigned long int strtoul(const char* nptr, char** endptr, int base);
+# if __ARCH == 64 && __cplusplus >= 201103L
+	extern unsigned long long int strtoull(const char* nptr, char** endptr, int base);
+# endif // __ARCH == 64 && __cplusplus >= 201103L
+
+	extern int mblen(const char* s, size_t n);
+	extern int mbtowc(wchar_t* pwc, const char* s, size_t n);
+	extern int wctomb(char* s, wchar_t wchar);
+	extern size_t mbstowcs(wchar_t* pwcs, const char* s, size_t n);
+	extern size_t wcstombs(char* s, const wchar_t* pwcs, size_t n);
+
+	extern void* bsearch(const void* key, const void* base, size_t nmemb, size_t size, int (*compar)(const void*, const void*));
+	extern void qsort(void* base, size_t nmemb, size_t size, int (*compar)(const void*, const void*));
+
+	extern int rand();
+	extern void srand(unsigned int seed);
+
+	extern int abs(int j);
+	extern long int abs(long int j);
+	extern long long int abs(long long int j);
+	extern float abs(float j);
+	extern double abs(double j);
+	extern long double abs(long double j);
+	extern long int labs(long int j);
+# if __ARCH == 64
+	extern long long int llabs(long long int j);
+# endif // __ARCH == 64
+	extern div_t div(int numer, int denom);
+	extern ldiv_t div(long int numer, long int denom);
+# if __ARCH == 64
+	extern lldiv_t div(long long int numer, long long int denom);
+# endif // __ARCH == 64
+	extern ldiv_t ldiv(long int numer, long int denom);
+# if __ARCH == 64
+	extern lldiv_t lldiv(long long int numer, long long int denom);
+# endif // __ARCH == 64
+
+__END_NAMESPACE_STD
+
+#endif // __LIBCPP_CSTDLIB

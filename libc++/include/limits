@@ -1,0 +1,876 @@
+/* 
+ * The Koreh-v1 Project
+ * Koreh-v1 C/C++ Compiler (ccxx)
+ * 
+ * Copyright (C) 2021, Bryan "/dev/core" M.
+ * Licensed under the Mozilla Public License 2.0
+ * https://www.mozilla.org/en-US/MPL/2.0/
+ * 
+ * Common language definitions as defined in
+ * Clause 17.3 of the ISO-C++23 working draft.
+ * 
+ * The ISO documents referenced by this compiler can be found at
+ * http://open-std.org/JTC1/SC22/WG21/docs/papers/2020/n4878.pdf (C++23 Working Draft)
+ * http://open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf (C2x Working Draft)
+ * 
+ */
+
+/* 
+ * synopsis: 
+ * 
+ * #define __cpp_lib_char8_t
+ * 
+ * __BEGIN_NAMESPACE_STD
+ * 
+ * enum float_round_style;
+ * enum float_denorm_style;
+ * 
+ * template<class T> class numeric_limits;
+ * 
+ * template<class T> class numeric_limits<const T>;
+ * template<class T> class numeric_limits<volatile T>;
+ * template<class T> class numeric_limits<const volatile T>;
+ * 
+ * template<> class numeric_limits<bool>;
+ * 
+ * template<> class numeric_limits<char>;
+ * template<> class numeric_limits<signed char>;
+ * template<> class numeric_limits<unsigned char>;
+ * template<> class numeric_limits<char8_t>;
+ * template<> class numeric_limits<char16_t>;
+ * template<> class numeric_limits<char32_t>;
+ * template<> class numeric_limits<wchar_t>;
+ * 
+ * template<> class numeric_limits<short>;
+ * template<> class numeric_limits<int>;
+ * template<> class numeric_limits<long>;
+ * #if __ARCH == 64
+ * template<> class numeric_limits<long long>;
+ * #endif
+ * template<> class numeric_limits<unsigned short>;
+ * template<> class numeric_limits<unsigned int>;
+ * template<> class numeric_limits<unsigned long>;
+ * #if __ARCH == 64
+ * template<> class numeric_limits<unsigned long long>;
+ * #endif
+ * 
+ * template<> class numeric_limits<float>;
+ * template<> class numeric_limits<double>;
+ * template<> class numeric_limits<long double>;
+ * 
+ * __END_NAMESPACE_STD
+ */
+
+#ifndef __LIBCPP_LIMITS
+# define __LIBCPP_LIMITS
+# include <config>
+# include <climits>
+# include <cmath>
+
+# ifndef __cpp_lib_char8_t
+#  define __cpp_lib_char8_t 201907L
+# endif // __cpp_lib_char8_t
+
+// Macros derived from glibcxx
+# define __libcpp_is_signed(T) ((T)-1 < 0)
+# define __libcpp_min(T) (__libcpp_is_signed(T) ? __libcpp_max(T) - 1 : 0)
+# define __libcpp_max(T) (__libcpp_is_signed(T) ? (((((T)1 << (__libcpp_digits(T) - 1)) - 1) << 1) + 1) : ~(T)0)
+# define __libcpp_digits(T) ((sizeof(T) * __CHAR_BIT__) - (__libcpp_is_signed(T)))
+# define __libcpp_digits10(T) (__libcpp_digits(T) * 643L / 2136)
+
+__BEGIN_NAMESPACE_STD
+	enum float_round_style {
+		round_indeterminate = -1,
+		round_toward_zero = 0,
+		round_to_nearest = 1,
+		round_toward_infinity = 2,
+		round_toward_neg_infinity = 3
+	};
+
+	enum float_denorm_style {
+		denorm_indeterminate = -1,
+		denorm_absent = 0,
+		denorm_present = 1
+	};
+
+	template<class T> class numeric_limits {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = false;
+		static __HAS_CONSTEXPR__ T min() __HAS_NOEXCEPT__ { return T(); }
+		static __HAS_CONSTEXPR__ T max() __HAS_NOEXCEPT__ { return T(); }
+# if __cplusplus >= 201103L
+		static constexpr T lowest() noexcept { return T(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = 0;
+		static __HAS_CONSTEXPR__ int digits10 = 0;
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = false;
+		static __HAS_CONSTEXPR__ bool is_integer = false;
+		static __HAS_CONSTEXPR__ bool is_exact = false;
+		static __HAS_CONSTEXPR__ int radix = 0;
+		static __HAS_CONSTEXPR__ T epsilon() __HAS_NOEXCEPT__ { return T(); }
+		static __HAS_CONSTEXPR__ T round_error() __HAS_NOEXCEPT__ { return T(); }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ T infinity() __HAS_NOEXCEPT__ { return T(); }
+		static __HAS_CONSTEXPR__ T quiet_NaN() __HAS_NOEXCEPT__ { return T(); }
+		static __HAS_CONSTEXPR__ T signaling_NaN() __HAS_NOEXCEPT__ { return T(); }
+		static __HAS_CONSTEXPR__ T denorm_min() __HAS_NOEXCEPT__ { return T(); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = false;
+		static __HAS_CONSTEXPR__ bool is_modulo = false;
+		static __HAS_CONSTEXPR__ bool traps = false;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+
+	template<class T> class numeric_limits<const T> : public numeric_limits<T> { };
+	template<class T> class numeric_limits<volatile T> : public numeric_limits<T> { };
+	template<class T> class numeric_limits<const volatile T> : public numeric_limits<T> { };
+	
+	template<> class numeric_limits<bool> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ bool min() __HAS_NOEXCEPT__ { return false; }
+		static __HAS_CONSTEXPR__ bool max() __HAS_NOEXCEPT__ { return true; }
+# if __cplusplus >= 201103L
+		static constexpr bool lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = 1;
+		static __HAS_CONSTEXPR__ int digits10 = 0;
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = false;
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ bool epsilon() __HAS_NOEXCEPT__ { return false; }
+		static __HAS_CONSTEXPR__ bool round_error() __HAS_NOEXCEPT__ { return false; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ bool infinity() __HAS_NOEXCEPT__ { return false; }
+		static __HAS_CONSTEXPR__ bool quiet_NaN() __HAS_NOEXCEPT__ { return false; }
+		static __HAS_CONSTEXPR__ bool signaling_NaN() __HAS_NOEXCEPT__ { return false; }
+		static __HAS_CONSTEXPR__ bool denorm_min() __HAS_NOEXCEPT__ { return false; }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = false;
+		static __HAS_CONSTEXPR__ bool traps = false;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+	
+	template<> class numeric_limits<char> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ char min() __HAS_NOEXCEPT__ { return __libcpp_min(char); }
+		static __HAS_CONSTEXPR__ char max() __HAS_NOEXCEPT__ { return __libcpp_max(char); }
+# if __cplusplus >= 201103L
+		static constexpr char lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(char);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(char);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = __CHAR_SIGN__;
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ char epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ char round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ char infinity() __HAS_NOEXCEPT__ { return char(); }
+		static __HAS_CONSTEXPR__ char quiet_NaN() __HAS_NOEXCEPT__ { return char(); }
+		static __HAS_CONSTEXPR__ char signaling_NaN() __HAS_NOEXCEPT__ { return char(); }
+		static __HAS_CONSTEXPR__ char denorm_min() __HAS_NOEXCEPT__ { return static_cast<char>(0); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+
+	template<> class numeric_limits<signed char> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ signed char min() __HAS_NOEXCEPT__ { return __libcpp_min(signed char); }
+		static __HAS_CONSTEXPR__ signed char max() __HAS_NOEXCEPT__ { return __libcpp_max(signed char); }
+# if __cplusplus >= 201103L
+		static constexpr signed char lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(signed char);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(signed char);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = true;
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ signed char epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ signed char round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ signed char infinity() __HAS_NOEXCEPT__ { return static_cast<signed char>(0); }
+		static __HAS_CONSTEXPR__ signed char quiet_NaN() __HAS_NOEXCEPT__ { return static_cast<signed char>(0); }
+		static __HAS_CONSTEXPR__ signed char signaling_NaN() __HAS_NOEXCEPT__ { return static_cast<signed char>(0); }
+		static __HAS_CONSTEXPR__ signed char denorm_min() __HAS_NOEXCEPT__ { return static_cast<signed char>(0); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+	template<> class numeric_limits<unsigned char> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ unsigned char min() __HAS_NOEXCEPT__ { return __libcpp_min(unsigned char); }
+		static __HAS_CONSTEXPR__ unsigned char max() __HAS_NOEXCEPT__ { return __libcpp_max(unsigned char); }
+# if __cplusplus >= 201103L
+		static constexpr unsigned char lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(unsigned char);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(unsigned char);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = false;
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ unsigned char epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ unsigned char round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ unsigned char infinity() __HAS_NOEXCEPT__ { return static_cast<unsigned char>(0); }
+		static __HAS_CONSTEXPR__ unsigned char quiet_NaN() __HAS_NOEXCEPT__ { return static_cast<unsigned char>(0); }
+		static __HAS_CONSTEXPR__ unsigned char signaling_NaN() __HAS_NOEXCEPT__ { return static_cast<unsigned char>(0); }
+		static __HAS_CONSTEXPR__ unsigned char denorm_min() __HAS_NOEXCEPT__ { return static_cast<unsigned char>(0); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+
+# if __cplusplus >= __cpp_lib_char8_t
+	template<> class numeric_limits<char8_t> { // char8_t added in C++20 https://en.cppreference.com/w/cpp/language/types#char8_t
+	public:
+		static constexpr bool is_specialized = true;
+		static constexpr char8_t min() noexcept { return __libcpp_min(char8_t); }
+		static constexpr char8_t max() noexcept { return __libcpp_max(char8_t); }
+		static constexpr char8_t lowest() noexcept { return min(); }
+		static constexpr int digits = __libcpp_digits(char8_t);
+		static constexpr int digits10 = __libcpp_digits10(char8_t);
+		static constexpr int max_digits10 = 0;
+		static constexpr bool is_signed = __libcpp_is_signed(char8_t);
+		static constexpr bool is_integer = true;
+		static constexpr bool is_exact = true;
+		static constexpr int radix = 2;
+		static constexpr char8_t epsilon() noexcept { return 0; }
+		static constexpr char8_t round_error() noexcept { return 0; }
+		static constexpr int min_exponent = 0;
+		static constexpr int min_exponent10 = 0;
+		static constexpr int max_exponent = 0;
+		static constexpr int max_exponent10 = 0;
+		static constexpr bool has_infinity = false;
+		static constexpr bool has_quiet_NaN = false;
+		static constexpr bool has_signaling_NaN = false;
+		static constexpr float_denorm_style has_denorm = denorm_absent;
+		static constexpr bool has_denorm_loss = false;
+		static constexpr char8_t infinity() noexcept { return static_cast<char8_t>(0); }
+		static constexpr char8_t quiet_NaN() noexcept { return static_cast<char8_t>(0); }
+		static constexpr char8_t signaling_NaN() noexcept { return static_cast<char8_t>(0); }
+		static constexpr char8_t denorm_min() noexcept { return static_cast<char8_t>(0); }
+		static constexpr bool is_iec559 = false;
+		static constexpr bool is_bounded = true;
+		static constexpr bool is_modulo = !is_signed;
+		static constexpr bool traps = __INTEGRAL_TRAPS__;
+		static constexpr bool tinyness_before = false;
+		static constexpr float_round_style round_style = round_toward_zero;
+	};
+# endif // __cplusplus >= __cpp_lib_char8_t
+# if __cplusplus >= 201103L
+	template<> class numeric_limits<char16_t> {
+	public:
+		static constexpr bool is_specialized = true;
+		static constexpr char16_t min() noexcept { return __libcpp_min(char16_t); }
+		static constexpr char16_t max() noexcept { return __libcpp_max(char16_t); }
+		static constexpr char16_t lowest() noexcept { return min(); }
+		static constexpr int digits = __libcpp_digits(char16_t);
+		static constexpr int digits10 = __libcpp_digits10(char16_t);
+		static constexpr int max_digits10 = 0;
+		static constexpr bool is_signed = __libcpp_is_signed(char16_t);
+		static constexpr bool is_integer = true;
+		static constexpr bool is_exact = true;
+		static constexpr int radix = 2;
+		static constexpr char16_t epsilon() noexcept { return 0; }
+		static constexpr char16_t round_error() noexcept { return 0; }
+		static constexpr int min_exponent = 0;
+		static constexpr int min_exponent10 = 0;
+		static constexpr int max_exponent = 0;
+		static constexpr int max_exponent10 = 0;
+		static constexpr bool has_infinity = false;
+		static constexpr bool has_quiet_NaN = false;
+		static constexpr bool has_signaling_NaN = false;
+		static constexpr float_denorm_style has_denorm = denorm_absent;
+		static constexpr bool has_denorm_loss = false;
+		static constexpr char16_t infinity() noexcept { return static_cast<char16_t>(0); }
+		static constexpr char16_t quiet_NaN() noexcept { return static_cast<char16_t>(0); }
+		static constexpr char16_t signaling_NaN() noexcept { return static_cast<char16_t>(0); }
+		static constexpr char16_t denorm_min() noexcept { return static_cast<char16_t>(0); }
+		static constexpr bool is_iec559 = false;
+		static constexpr bool is_bounded = true;
+		static constexpr bool is_modulo = !is_signed;
+		static constexpr bool traps = __INTEGRAL_TRAPS__;
+		static constexpr bool tinyness_before = false;
+		static constexpr float_round_style round_style = round_toward_zero;
+	};
+	template<> class numeric_limits<char32_t> {
+	public:
+		static constexpr bool is_specialized = true;
+		static constexpr char32_t min() noexcept { return __libcpp_min(char32_t); }
+		static constexpr char32_t max() noexcept { return __libcpp_max(char32_t); }
+		static constexpr char32_t lowest() noexcept { return min(); }
+		static constexpr int digits = __libcpp_digits(char32_t);
+		static constexpr int digits10 = __libcpp_digits10(char32_t);
+		static constexpr int max_digits10 = 0;
+		static constexpr bool is_signed = __libcpp_is_signed(char32_t);
+		static constexpr bool is_integer = true;
+		static constexpr bool is_exact = true;
+		static constexpr int radix = 2;
+		static constexpr char32_t epsilon() noexcept { return 0; }
+		static constexpr char32_t round_error() noexcept { return 0; }
+		static constexpr int min_exponent = 0;
+		static constexpr int min_exponent10 = 0;
+		static constexpr int max_exponent = 0;
+		static constexpr int max_exponent10 = 0;
+		static constexpr bool has_infinity = false;
+		static constexpr bool has_quiet_NaN = false;
+		static constexpr bool has_signaling_NaN = false;
+		static constexpr float_denorm_style has_denorm = denorm_absent;
+		static constexpr bool has_denorm_loss = false;
+		static constexpr char32_t infinity() noexcept { return static_cast<char32_t>(0); }
+		static constexpr char32_t quiet_NaN() noexcept { return static_cast<char32_t>(0); }
+		static constexpr char32_t signaling_NaN() noexcept { return static_cast<char32_t>(0); }
+		static constexpr char32_t denorm_min() noexcept { return static_cast<char32_t>(0); }
+		static constexpr bool is_iec559 = false;
+		static constexpr bool is_bounded = true;
+		static constexpr bool is_modulo = !is_signed;
+		static constexpr bool traps = __INTEGRAL_TRAPS__;
+		static constexpr bool tinyness_before = false;
+		static constexpr float_round_style round_style = round_toward_zero;
+	};
+# endif // __cplusplus >= 201103L
+	template<> class numeric_limits<wchar_t> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ wchar_t min() __HAS_NOEXCEPT__ { return __libcpp_min(wchar_t); }
+		static __HAS_CONSTEXPR__ wchar_t max() __HAS_NOEXCEPT__ { return __libcpp_max(wchar_t); }
+# if __cplusplus >= 201103L
+		static constexpr wchar_t lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(wchar_t);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(wchar_t);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = __libcpp_is_signed(wchar_t);
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ wchar_t epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ wchar_t round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ wchar_t infinity() __HAS_NOEXCEPT__ { return wchar_t(); }
+		static __HAS_CONSTEXPR__ wchar_t quiet_NaN() __HAS_NOEXCEPT__ { return wchar_t(); }
+		static __HAS_CONSTEXPR__ wchar_t signaling_NaN() __HAS_NOEXCEPT__ { return wchar_t(); }
+		static __HAS_CONSTEXPR__ wchar_t denorm_min() __HAS_NOEXCEPT__ { return wchar_t(); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+	
+	template<> class numeric_limits<short> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ short min() __HAS_NOEXCEPT__ { return __libcpp_min(short); }
+		static __HAS_CONSTEXPR__ short max() __HAS_NOEXCEPT__ { return __libcpp_max(short); }
+# if __cplusplus >= 201103L
+		static constexpr short lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(short);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(short);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = __libcpp_is_signed(short);
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ short epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ short round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ short infinity() __HAS_NOEXCEPT__ { return short(); }
+		static __HAS_CONSTEXPR__ short quiet_NaN() __HAS_NOEXCEPT__ { return short(); }
+		static __HAS_CONSTEXPR__ short signaling_NaN() __HAS_NOEXCEPT__ { return short(); }
+		static __HAS_CONSTEXPR__ short denorm_min() __HAS_NOEXCEPT__ { return short(); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+	template<> class numeric_limits<int> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ int min() __HAS_NOEXCEPT__ { return __libcpp_min(int); }
+		static __HAS_CONSTEXPR__ int max() __HAS_NOEXCEPT__ { return __libcpp_max(int); }
+# if __cplusplus >= 201103L
+		static constexpr int lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(int);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(int);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = __libcpp_is_signed(int);
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ int epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ int infinity() __HAS_NOEXCEPT__ { return int(); }
+		static __HAS_CONSTEXPR__ int quiet_NaN() __HAS_NOEXCEPT__ { return int(); }
+		static __HAS_CONSTEXPR__ int signaling_NaN() __HAS_NOEXCEPT__ { return int(); }
+		static __HAS_CONSTEXPR__ int denorm_min() __HAS_NOEXCEPT__ { return int(); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+	template<> class numeric_limits<long> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ long min() __HAS_NOEXCEPT__ { return __libcpp_min(long); }
+		static __HAS_CONSTEXPR__ long max() __HAS_NOEXCEPT__ { return __libcpp_max(long); }
+# if __cplusplus >= 201103L
+		static constexpr long lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(long);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(long);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = __libcpp_is_signed(long);
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ long epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ long round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ long infinity() __HAS_NOEXCEPT__ { return long(); }
+		static __HAS_CONSTEXPR__ long quiet_NaN() __HAS_NOEXCEPT__ { return long(); }
+		static __HAS_CONSTEXPR__ long signaling_NaN() __HAS_NOEXCEPT__ { return long(); }
+		static __HAS_CONSTEXPR__ long denorm_min() __HAS_NOEXCEPT__ { return long(); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+#if __ARCH == 64 && __cplusplus >= 201103L
+	template<> class numeric_limits<long long> {
+	public:
+		static constexpr bool is_specialized = true;
+		static constexpr long long min() noexcept { return __libcpp_min(long long); }
+		static constexpr long long max() noexcept { return __libcpp_max(long long); }
+		static constexpr long long lowest() noexcept { return min(); }
+		static constexpr int digits = __libcpp_digits(long long);
+		static constexpr int digits10 = __libcpp_digits10(long long);
+		static constexpr int max_digits10 = 0;
+		static constexpr bool is_signed = __libcpp_is_signed(long long);
+		static constexpr bool is_integer = true;
+		static constexpr bool is_exact = true;
+		static constexpr int radix = 2;
+		static constexpr long long epsilon() noexcept { return 0; }
+		static constexpr long long round_error() noexcept { return 0; }
+		static constexpr int min_exponent = 0;
+		static constexpr int min_exponent10 = 0;
+		static constexpr int max_exponent = 0;
+		static constexpr int max_exponent10 = 0;
+		static constexpr bool has_infinity = false;
+		static constexpr bool has_quiet_NaN = false;
+		static constexpr bool has_signaling_NaN = false;
+		static constexpr float_denorm_style has_denorm = denorm_absent;
+		static constexpr bool has_denorm_loss = false;
+		static constexpr long long infinity() noexcept { return static_cast<long long>(0); }
+		static constexpr long long quiet_NaN() noexcept { return static_cast<long long>(0); }
+		static constexpr long long signaling_NaN() noexcept { return static_cast<long long>(0); }
+		static constexpr long long denorm_min() noexcept { return static_cast<long long>(0); }
+		static constexpr bool is_iec559 = false;
+		static constexpr bool is_bounded = true;
+		static constexpr bool is_modulo = !is_signed;
+		static constexpr bool traps = __INTEGRAL_TRAPS__;
+		static constexpr bool tinyness_before = false;
+		static constexpr float_round_style round_style = round_toward_zero;
+	};
+#endif // __ARCH == 64 && __cplusplus >= 201103L
+	template<> class numeric_limits<unsigned short> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ unsigned short min() __HAS_NOEXCEPT__ { return __libcpp_min(unsigned short); }
+		static __HAS_CONSTEXPR__ unsigned short max() __HAS_NOEXCEPT__ { return __libcpp_max(unsigned short); }
+# if __cplusplus >= 201103L
+		static constexpr unsigned short lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(unsigned short);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(unsigned short);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = __libcpp_is_signed(unsigned short);
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ unsigned short epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ unsigned short round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ unsigned short infinity() __HAS_NOEXCEPT__ { return static_cast<unsigned short>(0); }
+		static __HAS_CONSTEXPR__ unsigned short quiet_NaN() __HAS_NOEXCEPT__ { return static_cast<unsigned short>(0); }
+		static __HAS_CONSTEXPR__ unsigned short signaling_NaN() __HAS_NOEXCEPT__ { return static_cast<unsigned short>(0); }
+		static __HAS_CONSTEXPR__ unsigned short denorm_min() __HAS_NOEXCEPT__ { return static_cast<unsigned short>(0); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+	template<> class numeric_limits<unsigned int> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ unsigned int min() __HAS_NOEXCEPT__ { return __libcpp_min(unsigned int); }
+		static __HAS_CONSTEXPR__ unsigned int max() __HAS_NOEXCEPT__ { return __libcpp_max(unsigned int); }
+# if __cplusplus >= 201103L
+		static constexpr unsigned int lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(unsigned int);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(unsigned int);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = __libcpp_is_signed(unsigned int);
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ unsigned int epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ unsigned int round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ unsigned int infinity() __HAS_NOEXCEPT__ { return static_cast<unsigned int>(0); }
+		static __HAS_CONSTEXPR__ unsigned int quiet_NaN() __HAS_NOEXCEPT__ { return static_cast<unsigned int>(0); }
+		static __HAS_CONSTEXPR__ unsigned int signaling_NaN() __HAS_NOEXCEPT__ { return static_cast<unsigned int>(0); }
+		static __HAS_CONSTEXPR__ unsigned int denorm_min() __HAS_NOEXCEPT__ { return static_cast<unsigned int>(0); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+	template<> class numeric_limits<unsigned long> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ unsigned long min() __HAS_NOEXCEPT__ { return __libcpp_min(unsigned long); }
+		static __HAS_CONSTEXPR__ unsigned long max() __HAS_NOEXCEPT__ { return __libcpp_max(unsigned long); }
+# if __cplusplus >= 201103L
+		static constexpr unsigned long lowest() noexcept { return min(); }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __libcpp_digits(unsigned long);
+		static __HAS_CONSTEXPR__ int digits10 = __libcpp_digits10(unsigned long);
+# if __cplusplus >= 201103L
+		static constexpr int max_digits10 = 0;
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = __libcpp_is_signed(unsigned long);
+		static __HAS_CONSTEXPR__ bool is_integer = true;
+		static __HAS_CONSTEXPR__ bool is_exact = true;
+		static __HAS_CONSTEXPR__ int radix = 2;
+		static __HAS_CONSTEXPR__ unsigned long epsilon() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ unsigned long round_error() __HAS_NOEXCEPT__ { return 0; }
+		static __HAS_CONSTEXPR__ int min_exponent = 0;
+		static __HAS_CONSTEXPR__ int min_exponent10 = 0;
+		static __HAS_CONSTEXPR__ int max_exponent = 0;
+		static __HAS_CONSTEXPR__ int max_exponent10 = 0;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = false;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = false;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_absent;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = false;
+		static __HAS_CONSTEXPR__ unsigned long infinity() __HAS_NOEXCEPT__ { return static_cast<unsigned long>(0); }
+		static __HAS_CONSTEXPR__ unsigned long quiet_NaN() __HAS_NOEXCEPT__ { return static_cast<unsigned long>(0); }
+		static __HAS_CONSTEXPR__ unsigned long signaling_NaN() __HAS_NOEXCEPT__ { return static_cast<unsigned long>(0); }
+		static __HAS_CONSTEXPR__ unsigned long denorm_min() __HAS_NOEXCEPT__ { return static_cast<unsigned long>(0); }
+		static __HAS_CONSTEXPR__ bool is_iec559 = false;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = !is_signed;
+		static __HAS_CONSTEXPR__ bool traps = __INTEGRAL_TRAPS__;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_toward_zero;
+	};
+#if __ARCH == 64
+	template<> class numeric_limits<unsigned long long> {
+	public:
+		static constexpr bool is_specialized = true;
+		static constexpr unsigned long long min() noexcept { return __libcpp_min(unsigned long long); }
+		static constexpr unsigned long long max() noexcept { return __libcpp_max(unsigned long long); }
+		static constexpr unsigned long long lowest() noexcept { return min(); }
+		static constexpr int digits = __libcpp_digits(unsigned long long);
+		static constexpr int digits10 = __libcpp_digits10(unsigned long long);
+		static constexpr int max_digits10 = 0;
+		static constexpr bool is_signed = __libcpp_is_signed(unsigned long long);
+		static constexpr bool is_integer = true;
+		static constexpr bool is_exact = true;
+		static constexpr int radix = 2;
+		static constexpr unsigned long long epsilon() noexcept { return 0; }
+		static constexpr unsigned long long round_error() noexcept { return 0; }
+		static constexpr int min_exponent = 0;
+		static constexpr int min_exponent10 = 0;
+		static constexpr int max_exponent = 0;
+		static constexpr int max_exponent10 = 0;
+		static constexpr bool has_infinity = false;
+		static constexpr bool has_quiet_NaN = false;
+		static constexpr bool has_signaling_NaN = false;
+		static constexpr float_denorm_style has_denorm = denorm_absent;
+		static constexpr bool has_denorm_loss = false;
+		static constexpr unsigned long long infinity() noexcept { return static_cast<unsigned long long>(0); }
+		static constexpr unsigned long long quiet_NaN() noexcept { return static_cast<unsigned long long>(0); }
+		static constexpr unsigned long long signaling_NaN() noexcept { return static_cast<unsigned long long>(0); }
+		static constexpr unsigned long long denorm_min() noexcept { return static_cast<unsigned long long>(0); }
+		static constexpr bool is_iec559 = false;
+		static constexpr bool is_bounded = true;
+		static constexpr bool is_modulo = !is_signed;
+		static constexpr bool traps = __INTEGRAL_TRAPS__;
+		static constexpr bool tinyness_before = false;
+		static constexpr float_round_style round_style = round_toward_zero;
+	};
+#endif // __ARCH == 64
+	
+	template<> class numeric_limits<float> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ float min() __HAS_NOEXCEPT__ { return __FLT_MIN__; }
+		static __HAS_CONSTEXPR__ float max() __HAS_NOEXCEPT__ { return __FLT_MAX__; }
+# if __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ float lowest() __HAS_NOEXCEPT__ { return -__FLT_MAX__; }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __FLT_DIGITS__;
+		static __HAS_CONSTEXPR__ int digits10 = __FLT_DIGITS10__;
+# if __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int max_digits10 = __libcpp_digits10(__FLT_DIGITS__);
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = true;
+		static __HAS_CONSTEXPR__ bool is_integer = false;
+		static __HAS_CONSTEXPR__ bool is_exact = false;
+		static __HAS_CONSTEXPR__ int radix = __FLT_RADIX__;
+		static __HAS_CONSTEXPR__ float epsilon() __HAS_NOEXCEPT__ { return __FLT_EPSILON__; }
+		static __HAS_CONSTEXPR__ float round_error() __HAS_NOEXCEPT__ { return 0.5f; }
+		static __HAS_CONSTEXPR__ int min_exponent = __FLT_MIN_EXP__;
+		static __HAS_CONSTEXPR__ int min_exponent10 = __FLT_MIN_EXP_10__;
+		static __HAS_CONSTEXPR__ int max_exponent = __FLT_MAX_EXP__;
+		static __HAS_CONSTEXPR__ int max_exponent10 = __FLT_MAX_EXP_10__;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = true;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = true;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_present;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = true;
+		static __HAS_CONSTEXPR__ float infinity() __HAS_NOEXCEPT__ { return (1.0 / 0.0); }
+		static __HAS_CONSTEXPR__ float quiet_NaN() __HAS_NOEXCEPT__ { return sqrt(-1); }
+		static __HAS_CONSTEXPR__ float signaling_NaN() __HAS_NOEXCEPT__ { return sqrt(-1); }
+		static __HAS_CONSTEXPR__ float denorm_min() __HAS_NOEXCEPT__ { return __FLT_DENORM_MIN__; }
+		static __HAS_CONSTEXPR__ bool is_iec559 = true;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = false;
+		static __HAS_CONSTEXPR__ bool traps = false;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_to_nearest;
+	};
+	template<> class numeric_limits<double> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ double min() __HAS_NOEXCEPT__ { return __DBL_MIN__; }
+		static __HAS_CONSTEXPR__ double max() __HAS_NOEXCEPT__ { return __DBL_MAX__; }
+# if __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ double lowest() __HAS_NOEXCEPT__ { return -__DBL_MAX__; }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __DBL_DIGITS__;
+		static __HAS_CONSTEXPR__ int digits10 = __DBL_DIGITS10__;
+# if __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int max_digits10 = __libcpp_digits10(__DBL_DIGITS__);
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = true;
+		static __HAS_CONSTEXPR__ bool is_integer = false;
+		static __HAS_CONSTEXPR__ bool is_exact = false;
+		static __HAS_CONSTEXPR__ int radix = __FLT_RADIX__;
+		static __HAS_CONSTEXPR__ double epsilon() __HAS_NOEXCEPT__ { return __DBL_EPSILON__; }
+		static __HAS_CONSTEXPR__ double round_error() __HAS_NOEXCEPT__ { return 0.5; }
+		static __HAS_CONSTEXPR__ int min_exponent = __DBL_MIN_EXP__;
+		static __HAS_CONSTEXPR__ int min_exponent10 = __DBL_MIN_EXP_10__;
+		static __HAS_CONSTEXPR__ int max_exponent = __DBL_MAX_EXP__;
+		static __HAS_CONSTEXPR__ int max_exponent10 = __DBL_MAX_EXP_10__;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = true;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = true;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_present;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = true;
+		static __HAS_CONSTEXPR__ double infinity() __HAS_NOEXCEPT__ { return (1.0 / 0.0); }
+		static __HAS_CONSTEXPR__ double quiet_NaN() __HAS_NOEXCEPT__ { return sqrt(-1); }
+		static __HAS_CONSTEXPR__ double signaling_NaN() __HAS_NOEXCEPT__ { return sqrt(-1); }
+		static __HAS_CONSTEXPR__ double denorm_min() __HAS_NOEXCEPT__ { return __DBL_DENORM_MIN__; }
+		static __HAS_CONSTEXPR__ bool is_iec559 = true;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = false;
+		static __HAS_CONSTEXPR__ bool traps = false;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_to_nearest;
+	};
+	template<> class numeric_limits<long double> {
+	public:
+		static __HAS_CONSTEXPR__ bool is_specialized = true;
+		static __HAS_CONSTEXPR__ long double min() __HAS_NOEXCEPT__ { return __LDBL_MIN__; }
+		static __HAS_CONSTEXPR__ long double max() __HAS_NOEXCEPT__ { return __LDBL_MAX__; }
+# if __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ long double lowest() __HAS_NOEXCEPT__ { return -__LDBL_MAX__; }
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int digits = __LDBL_DIGITS__;
+		static __HAS_CONSTEXPR__ int digits10 = __LDBL_DIGITS10__;
+# if __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ int max_digits10 = __libcpp_digits10(__LDBL_DIGITS__);
+# endif // __cplusplus >= 201103L
+		static __HAS_CONSTEXPR__ bool is_signed = true;
+		static __HAS_CONSTEXPR__ bool is_integer = false;
+		static __HAS_CONSTEXPR__ bool is_exact = false;
+		static __HAS_CONSTEXPR__ int radix = __FLT_RADIX__;
+		static __HAS_CONSTEXPR__ long double epsilon() __HAS_NOEXCEPT__ { return __LDBL_EPSILON__; }
+		static __HAS_CONSTEXPR__ long double round_error() __HAS_NOEXCEPT__ { return 0.5l; }
+		static __HAS_CONSTEXPR__ int min_exponent = __LDBL_MIN_EXP__;
+		static __HAS_CONSTEXPR__ int min_exponent10 = __LDBL_MIN_EXP_10__;
+		static __HAS_CONSTEXPR__ int max_exponent = __LDBL_MAX_EXP__;
+		static __HAS_CONSTEXPR__ int max_exponent10 = __LDBL_MAX_EXP_10__;
+		static __HAS_CONSTEXPR__ bool has_infinity = false;
+		static __HAS_CONSTEXPR__ bool has_quiet_NaN = true;
+		static __HAS_CONSTEXPR__ bool has_signaling_NaN = true;
+		static __HAS_CONSTEXPR__ float_denorm_style has_denorm = denorm_present;
+		static __HAS_CONSTEXPR__ bool has_denorm_loss = true;
+		static __HAS_CONSTEXPR__ long double infinity() __HAS_NOEXCEPT__ { return (1.0 / 0.0); }
+		static __HAS_CONSTEXPR__ long double quiet_NaN() __HAS_NOEXCEPT__ { return sqrt(-1); }
+		static __HAS_CONSTEXPR__ long double signaling_NaN() __HAS_NOEXCEPT__ { return sqrt(-1); }
+		static __HAS_CONSTEXPR__ long double denorm_min() __HAS_NOEXCEPT__ { return __LDBL_DENORM_MIN__; }
+		static __HAS_CONSTEXPR__ bool is_iec559 = true;
+		static __HAS_CONSTEXPR__ bool is_bounded = true;
+		static __HAS_CONSTEXPR__ bool is_modulo = false;
+		static __HAS_CONSTEXPR__ bool traps = false;
+		static __HAS_CONSTEXPR__ bool tinyness_before = false;
+		static __HAS_CONSTEXPR__ float_round_style round_style = round_to_nearest;
+	};
+
+__END_NAMESPACE_STD
+#endif // __LIBCPP_LIMITS

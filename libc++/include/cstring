@@ -1,0 +1,64 @@
+/* 
+ * The Koreh-v1 Project
+ * Koreh-v1 C/C++ Compiler (ccxx)
+ * 
+ * Copyright (C) 2021, Bryan "/dev/core" M.
+ * Licensed under the Mozilla Public License 2.0
+ * https://www.mozilla.org/en-US/MPL/2.0/
+ * 
+ * Strings library definitions as defined in
+ * Clauses 21.5 of the ISO-C++23 working draft.
+ * 
+ * The ISO documents referenced by this compiler can be found at
+ * http://open-std.org/JTC1/SC22/WG21/docs/papers/2020/n4878.pdf (C++23 Working Draft)
+ * http://open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf (C2x Working Draft)
+ * 
+ */
+
+#ifndef __LIBCPP_CSTRING
+# define __LIBCPP_CSTRING
+# include <config>
+extern "C" {
+# include <string.h>
+}
+
+__BEGIN_NAMESPACE_STD
+# if __ARCH == 64
+#  ifdef __LP64__
+	using size_t = unsigned long;
+#  else
+	using size_t = unsigned long long;
+#  endif
+# else
+	using size_t = unsigned long;
+# endif // __ARCH == 64
+	using ::memcpy;
+	using ::memmove;
+	using ::strcpy;
+	using ::strncpy;
+	using ::strcat;
+	using ::strncat;
+	using ::memcmp;
+	using ::strcmp;
+	using ::strcoll;
+	using ::strncmp;
+	using ::strxfrm;
+	using ::memchr;
+	extern void* memchr(void* s, int c, size_t n);
+	using ::strchr;
+	extern char* strchr(char* s, int c);
+	/*size_t strcspn(const char* s1, const char* s2);
+	const char* strpbrk(const char* s1, const char* s2);
+	char* strpbrk(char* s1, const char* s2);
+	const char* strrchr(const char* s, int c);
+	char* strrchr(char* s, int c);
+	size_t strspn(const char* s1, const char* s2);*/
+	using ::strstr;
+	extern char* strstr(char* s1, const char* s2);
+	//char* strtok(char* s1, const char* s2);
+	using ::memset;
+	//char* strerror(int errnum);
+	using ::strlen;
+__END_NAMESPACE_STD
+
+#endif

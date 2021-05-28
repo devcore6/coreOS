@@ -1,0 +1,47 @@
+/* 
+ * The Koreh-v1 Project
+ * Koreh-v1 C/C++ Compiler (ccxx)
+ * 
+ * Copyright (C) 2021, Bryan "/dev/core" M.
+ * Licensed under the Mozilla Public License 2.0
+ * https://www.mozilla.org/en-US/MPL/2.0/
+ * 
+ * Type size limits as defined in clause 17.3.6.
+ * 
+ * The ISO documents referenced by this compiler can be found at
+ * http://open-std.org/JTC1/SC22/WG21/docs/papers/2020/n4878.pdf (C++23 Working Draft)
+ * http://open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf (C2x Working Draft)
+ * 
+ */
+
+/* 
+ * synopsis:
+ * 
+ * #define CHAR_BIT 
+ * #define SCHAR_MIN 
+ * #define SCHAR_MAX 
+ * #define UCHAR_MAX 
+ * #define CHAR_MIN 
+ * #define CHAR_MAX 
+ * #define MB_LEN_MAX 
+ * #define SHRT_MIN 
+ * #define SHRT_MAX 
+ * #define USHRT_MAX 
+ * #define INT_MIN 
+ * #define INT_MAX 
+ * #define UINT_MAX 
+ * #define LONG_MIN 
+ * #define LONG_MAX 
+ * #define ULONG_MAX 
+ * #define LLONG_MIN 
+ * #define LLONG_MAX 
+ * #define ULLONG_MAX 
+ * 
+ */
+
+#include <config>
+
+#ifndef __LIBCPP_CLIMITS
+# define __LIBCPP_CLIMITS
+# include <limits.h>
+#endif // __LIBCPP_CLIMITS

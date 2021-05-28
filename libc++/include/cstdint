@@ -1,0 +1,131 @@
+/* 
+ * The Koreh-v1 Project
+ * Koreh-v1 C/C++ Compiler (ccxx)
+ * 
+ * Copyright (C) 2021, Bryan "/dev/core" M.
+ * Licensed under the Mozilla Public License 2.0
+ * https://www.mozilla.org/en-US/MPL/2.0/
+ * 
+ * Integer type definitions as defined in
+ * Clause 17.4 of the ISO-C++23 working draft.
+ * 
+ * The ISO documents referenced by this compiler can be found at
+ * http://open-std.org/JTC1/SC22/WG21/docs/papers/2020/n4878.pdf (C++23 Working Draft)
+ * http://open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf (C2x Working Draft)
+ * 
+ */
+
+/*
+ * synopsis:
+ * 
+ * __BEGIN_NAMESPACE_STD
+ *     using int8_t;
+ *     using int16_t;
+ *     using int32_t;
+ *     using int64_t;
+ *     using int_fast8_t;
+ *     using int_fast16_t;
+ *     using int_fast32_t;
+ *     using int_fast64_t;
+ *     using int_least8_t;
+ *     using int_least16_t;
+ *     using int_least32_t;
+ *     using int_least64_t;
+ *     using intmax_t;
+ *     using intptr_t;
+ *     using uint8_t;
+ *     using uint16_t;
+ *     using uint32_t;
+ *     using uint64_t;
+ *     using uint_fast8_t;
+ *     using uint_fast16_t;
+ *     using uint_fast32_t;
+ *     using uint_fast64_t;
+ *     using uint_least8_t;
+ *     using uint_least16_t;
+ *     using uint_least32_t;
+ *     using uint_least64_t;
+ *     using uintmax_t;
+ *     using uintptr_t;
+ * __END_NAMESPACE_STD
+ * 
+ * #define INT8_MIN
+ * #define INT8_MAX
+ * #define UINT8_MAX
+ * #define INT16_MIN
+ * #define INT16_MAX
+ * #define UINT16_MAX
+ * #define INT32_MIN
+ * #define INT32_MAX
+ * #define UINT32_MAX
+ * #define INT64_MIN
+ * #define INT64_MAX
+ * #define UINT64_MAX
+ * #define INT_LEAST8_MIN
+ * #define INT_LEAST8_MAX
+ * #define UINT_LEAST8_MAX
+ * #define INT_LEAST16_MIN
+ * #define INT_LEAST16_MAX
+ * #define UINT_LEAST16_MAX
+ * #define INT_LEAST32_MIN
+ * #define INT_LEAST32_MAX
+ * #define UINT_LEAST32_MAX
+ * #define INT_LEAST64_MIN
+ * #define INT_LEAST64_MAX
+ * #define UINT_LEAST64_MAX
+ * #define INT_FAST8_MIN
+ * #define INT_FAST8_MAX
+ * #define UINT_FAST8_MAX
+ * #define INT_FAST16_MIN
+ * #define INT_FAST16_MAX
+ * #define UINT_FAST16_MAX
+ * #define INT_FAST32_MIN
+ * #define INT_FAST32_MAX
+ * #define UINT_FAST32_MAX
+ * #define INT_FAST64_MIN
+ * #define INT_FAST64_MAX
+ * #define UINT_FAST64_MAX
+ * #define INTPTR_MIN
+ * #define INTPTR_MAX
+ * #define UINTPTR_MAX
+ * #define INTMAX_MIN
+ * #define INTMAX_MAX
+ * #define UINTMAX_MAX
+ *
+ */
+
+#ifndef __LIBCPP_CSTDINT
+# include <config>
+# include <stdint.h>
+
+__BEGIN_NAMESPACE_STD
+	using int8_t = ::int8_t;
+	using int16_t = ::int16_t;
+	using int32_t = ::int32_t;
+	using int64_t = ::int64_t;
+	using int_fast8_t = ::int_fast8_t;
+	using int_fast16_t = ::int_fast16_t;
+	using int_fast32_t = ::int_fast32_t;
+	using int_fast64_t = ::int_fast64_t;
+	using int_least8_t = ::int_least8_t;
+	using int_least16_t = ::int_least16_t;
+	using int_least32_t = ::int_least32_t;
+	using int_least64_t = ::int_least64_t;
+	using intmax_t = ::intmax_t;
+	using intptr_t = ::intptr_t;
+	using uint8_t = ::uint8_t;
+	using uint16_t = ::uint16_t;
+	using uint32_t = ::uint32_t;
+	using uint64_t = ::uint64_t;
+	using uint_fast8_t = ::uint_fast8_t;
+	using uint_fast16_t = ::uint_fast16_t;
+	using uint_fast32_t = ::uint_fast32_t;
+	using uint_fast64_t = ::uint_fast64_t;
+	using uint_least8_t = ::uint_least8_t;
+	using uint_least16_t = ::uint_least16_t;
+	using uint_least32_t = ::uint_least32_t;
+	using uint_least64_t = ::uint_least64_t;
+	using uintmax_t = ::uintmax_t;
+	using uintptr_t = ::uintptr_t;
+__END_NAMESPACE_STD
+#endif
