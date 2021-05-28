@@ -28,7 +28,7 @@ Honestly, don't know. It is a fun project tho. I'll see how far I take stuff wit
 - VGA text mode
 - Basic kernel error reporting (mostly only for page faults currently)
 - PIT which will probably only be used for the scheduler
-- Kernel wait functions which put the CPU in a lower power state (C4)
+- Kernel wait functions which put the CPU in a lower power state (C1)
 
 ## Credits where credits are due
 - [libc](https://github.com/devcore6/Koreh-v1/tree/main/core-compiler-collection/libc) & [libc++](https://github.com/devcore6/Koreh-v1/tree/main/core-compiler-collection/libc%2B%2B) - I reused a lot of my standard C and C++ library implementation from my other project
