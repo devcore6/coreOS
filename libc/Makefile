@@ -32,6 +32,8 @@ $(ARCH_FREEOBJS) \
 stdio/printf.o \
 stdio/putchar.o \
 stdio/puts.o \
+stdio/getchar.o \
+stdio/gets.o \
 stdlib/abort.o \
 stdlib/malloc.o \
 stdlib/realloc.o \

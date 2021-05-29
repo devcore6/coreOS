@@ -1,14 +1,12 @@
 #include <stdio.h>
 
 #if defined(__is_libk)
-# include <kernel/putchar.h>
+# include <kernel/stdio.h>
 #endif
 
 int putchar(int ic) {
 #if defined(__is_libk)
-	char c = (char) ic;
-	if(c == '\n') klinebreak();
-	else kputc(c);
+	_kputchar(ic);
 #else
 	// TODO: Implement stdio and the write system call.
 #endif

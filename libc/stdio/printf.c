@@ -5,12 +5,20 @@
 #include <string.h>
 #include <stdint.h>
 
+#ifdef __is_libk
+# include <kernel/stdio.h>
+#endif
+
 static bool print(const char* data, size_t length) {
+#ifdef __is_libk
+	return _kprints((char*)data, length);
+#else
 	const unsigned char* bytes = (const unsigned char*) data;
-	for (size_t i = 0; i < length; i++)
-		if (putchar(bytes[i]) == EOF)
+	for(size_t i = 0; i < length; i++)
+		if(putchar(bytes[i]) == EOF)
 			return false;
 	return true;
+#endif
 }
 
 int printf(const char* restrict format, ...) {

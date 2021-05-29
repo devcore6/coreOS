@@ -53,7 +53,7 @@ void map_page(void *physaddr, void *virtualaddr, uint32_t flags) {
 
 	uint32_t *pd = (uint32_t*)0xFFFFF000;
 	if(pd[pdindex] == 0) {
-		pd[pdindex] = (((uint32_t)physaddr) & 0xFFC00000) | 0x03;
+		pd[pdindex] = (0x800000 + 0x1000 * pdindex) | 0x03;
 	}
 
 	uint32_t *pt = ((uint32_t*)0xFFC00000) + (0x400 * pdindex);
@@ -164,6 +164,7 @@ extern "C" {
 				page_map[i] = alloc_id;
 				allocated++;
 				if(allocated == size / 0x1000 + ((size % 0x1000) ? 1 : 0)) {
+					flush_tlb();
 					return return_address;
 				}
 			}
@@ -188,6 +189,7 @@ extern "C" {
 		}
 		unmap_page(ptr);
 		page_map[id] = 0;
+		flush_tlb();
 	}
 
 	void *_realloc(void *ptr, uint32_t size, uint32_t flags = PAGE_READWRITE) {

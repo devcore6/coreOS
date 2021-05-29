@@ -29,6 +29,8 @@ LIBKPP_CPPFLAGS:=$(LIBKPP_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 
 FREEOBJS=\
 $(ARCH_FREEOBJS) \
+../libc/stdlib/malloc.o \
+../libc/stdlib/free.o \
 language-support/new/delete.o \
 language-support/new/new.o \
 language-support/cstdlib/abort.o \
@@ -63,11 +65,17 @@ libcpp.a: $(OBJS)
 libkpp.a: $(LIBKPP_OBJS)
 	$(AR) rcs $@ $(LIBKPP_OBJS)
 
+.c.o:
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+
 .cpp.o:
 	$(CXX) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 .cpp.S:
 	$(CXX) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+
+.c.libkpp.o:
+	$(CC) -c $< -o $@ $(LIBKPP_CFLAGS) $(LIBKPP_CPPFLAGS)
 
 .cpp.libkpp.o:
 	$(CXX) -c $< -o $@ $(LIBKPP_CFLAGS) $(LIBKPP_CPPFLAGS)

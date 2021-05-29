@@ -51,8 +51,8 @@ void vga_initialize(void) {
 	vga_column = 0;
 	vga_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
 	vga_buffer = VGA_MEMORY;
-	for (size_t y = 0; y < VGA_HEIGHT; y++) {
-		for (size_t x = 0; x < VGA_WIDTH; x++) {
+	for(size_t y = 0; y < VGA_HEIGHT; y++) {
+		for(size_t x = 0; x < VGA_WIDTH; x++) {
 			const size_t index = y * VGA_WIDTH + x;
 			vga_buffer[index] = vga_entry(' ', vga_color);
 		}
@@ -78,17 +78,22 @@ void vga_scroll() {
 }
 
 void vga_putchar(char c) {
+	if(c == '\n') {
+		vga_linebreak();
+		return;
+	}
 	unsigned char uc = c;
 	vga_putentryat(uc, vga_color, vga_column, vga_row);
-	if (++vga_column == VGA_WIDTH) {
+	if(++vga_column == VGA_WIDTH) {
 		vga_column = 0;
-		if (++vga_row == VGA_HEIGHT)
+		if(++vga_row == VGA_HEIGHT)
 			vga_scroll();
 	}
+	update_cursor_auto();
 }
 
 void vga_write(const char* data, size_t size) {
-	for (size_t i = 0; i < size; i++)
+	for(size_t i = 0; i < size; i++)
 		vga_putchar(data[i]);
 }
 
@@ -98,11 +103,10 @@ void vga_writestring(const char* data) {
 
 void vga_linebreak() {
 	vga_column = 0;
-	if (++vga_row == VGA_HEIGHT)
+	if(++vga_row == VGA_HEIGHT)
 		vga_scroll();
+	update_cursor_auto();
 }
-
-#include <stdio.h>
 
 void vga_removeentry() {
 	if(vga_column == 0) return;
@@ -110,4 +114,9 @@ void vga_removeentry() {
 	vga_putchar(' ');
 	vga_column--;
 	update_cursor_auto();
+}
+
+void vga_setbuf(const char *buf) {
+	vga_initialize();
+	vga_writestring(buf);
 }

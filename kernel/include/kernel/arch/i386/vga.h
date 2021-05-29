@@ -43,6 +43,7 @@ extern void vga_write(const char* data, size_t size);
 extern void vga_writestring(const char* data);
 extern void vga_linebreak();
 extern void vga_removeentry();
+extern void vga_setbuf(const char *buf);
 
 # ifdef __cplusplus
 }

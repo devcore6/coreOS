@@ -1,5 +1,5 @@
-#ifndef __KERNEL_ARCH_I386_PS2_KB_HPP
-# define __KERNEL_ARCH_I386_PS2_KB_HPP
+#ifndef __DRIVERS_PS2_KB_HPP
+# define __DRIVERS_PS2_KB_HPP
 # include <kernel/keyboard.hpp>
 # include <kernel/io.h>
 

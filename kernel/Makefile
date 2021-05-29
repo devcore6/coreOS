@@ -14,7 +14,7 @@ BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
 CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra
-CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -fno-exceptions -fno-rtti -D_ARCH_$(HOSTARCH)
+CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -fno-exceptions -fno-rtti -fno-use-cxa-atexit -D_ARCH_$(HOSTARCH)
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lkpp -lgcc
 
@@ -22,6 +22,7 @@ ARCHDIR=arch/$(HOSTARCH)
 
 include $(ARCHDIR)/make.config
 include drivers/make.config
+include drivers/arch/$(HOSTARCH)/make.config
 
 CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
 CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
@@ -31,8 +32,10 @@ LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
 KERNEL_OBJS=\
 $(KERNEL_ARCH_OBJS) \
 $(DRIVER_OBJS) \
+$(DRIVER_ARCH_OBJS) \
 kernel/kernel.o \
-kernel/putchar.o \
+kernel/find_keyboard.o \
+kernel/stdio.o \
 
 OBJS=$(KERNEL_OBJS) \
 

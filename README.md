@@ -5,7 +5,7 @@ Honestly, don't know. It is a fun project tho. I'll see how far I take stuff wit
 ## To do list (in order of when I'm probably going to make stuff, give or take):
 - VGA driver (currently under development)
 - Serial driver
-- \<stdio.h> input functions (currently have to handle input directly through the driver)
+- \<stdio.h> input functions (mostly done, still needing scanf however)
 - PS2 mouse driver
 - Interrupt based PS2 keyboard driver (currently using polling)
 - Threads, scheduler

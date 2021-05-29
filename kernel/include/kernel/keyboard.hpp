@@ -1,6 +1,7 @@
 #ifndef __KERNEL_KEYBOARD_HPP
 # define __KERNEL_KEYBOARD_HPP
 # include <cstdint>
+# include <kernel/kwait.h>
 
 enum {
 	PS2_ESCAPE					= 0x01,
@@ -194,6 +195,41 @@ public:
 
 class keyboard_t {
 public:
+		uint16_t __poll_keyboard() {
+
+		if(driver) {
+			uint16_t keystroke = driver->poll_keyboard();
+
+			switch(keystroke) {
+				case PS2_LEFTSHIFT: { left_shift = true; return 0; }
+				case PS2_RIGHTSHIFT: { right_shift = true; return 0; }
+				case PS2_LEFTCONTROL: { left_control = true; return 0; }
+				//case PS2_RIGHTCONTROL: { right_control = true; return 0; }
+				case PS2_LEFTALT: { alt = true; return 0; }
+				//case PS2_ALTGR: { altgr = true; return 0; }
+				//case PS2_LEFTSUPER: { left_super = true; return 0; }
+				//case PS2_RIGHTSUPER: { right_super = true; return 0; }
+
+				case PS2_RELEASE_LEFTSHIFT: { left_shift = false; return 0; }
+				case PS2_RELEASE_RIGHTSHIFT: { right_shift = false; return 0; }
+				case PS2_RELEASE_LEFTCONTROL: { left_control = false; return 0; }
+				//case PS2_RELEASE_RIGHTCONTROL: { right_control = false; return 0; }
+				case PS2_RELEASE_LEFTALT: { alt = false; return 0; }
+				//case PS2_RELEASE_ALTGR: { altgr = false; return 0; }
+				//case PS2_RELEASE_LEFTSUPER: { left_super = false; return 0; }
+				//case PS2_RELEASE_RIGHTSUPER: { right_super = false; return 0; }
+
+				case PS2_NUMLOCK: { num_lock = !num_lock; driver->update_lights(num_lock, caps_lock, scroll_lock); return 0; }
+				case PS2_CAPSLOCK: { caps_lock = !caps_lock; driver->update_lights(num_lock, caps_lock, scroll_lock); return 0; }
+				case PS2_SCROLLOCK: { scroll_lock = !scroll_lock; driver->update_lights(num_lock, caps_lock, scroll_lock); return 0; }
+			}
+
+			return keystroke;
+		}
+
+		return 0;
+	}
+
 	uint16_t poll_keyboard() {
 
 		if(driver) {
@@ -257,5 +293,7 @@ public:
 
 	keyboard_driver *driver = nullptr;
 };
+
+extern keyboard_t *find_keyboard();
 
 #endif
