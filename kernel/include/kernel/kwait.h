@@ -12,10 +12,7 @@ inline void _kwait(uint32_t ms) {
 	}
 }
 
-inline void _kwait_for(bool (*expr)()) {
-	while(!expr()) {
-		// Put the CPU in a lower power state while we wait
-		asm volatile("hlt");
-	}
-}
+# define _kwait_for(expr) { while(!expr) { asm volatile("hlt"); } }
+# define _kwait_while(expr) { while(expr) { asm volatile("hlt"); } }
+
 #endif

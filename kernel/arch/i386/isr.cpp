@@ -2,8 +2,13 @@
 #include <kernel/arch/i386/vga.h>
 
 #include <kernel/thread.h>
+#include <kernel/stdio.h>
+#include <kernel/io.h>
 
 #include <stdlib.h>
+
+extern tty_t *ttys;
+extern tty_t *active_tty;
 
 extern "C" {
 
@@ -126,26 +131,57 @@ extern "C" {
 			
 		}
 	}
-	/*__attribute__((interrupt)) void irq0(struct interrupt_frame* frame) {
-		printf("irq0: ip: %i\n", frame->ip);
-		printf("irq0: cs: %i\n", frame->cs);
-		printf("irq0: flags: %i\n", frame->flags);
-		printf("irq0: sp: %i\n", frame->sp);
-		printf("irq0: ss: %i\n", frame->ss);
-	}*/
-	__attribute__((interrupt)) void irq1(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq2(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq3(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq4(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq5(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq6(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq7(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq8(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq9(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq10(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq11(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq12(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq13(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq14(struct interrupt_frame* frame) {}
-	__attribute__((interrupt)) void irq15(struct interrupt_frame* frame) {}
+
+	__attribute__((interrupt)) void irq1(struct interrupt_frame* frame) {
+		if(!active_tty) { outb(0x20, 0x20); return; }
+		if(!os_kb) { outb(0x20, 0x20); return; }
+		if(!os_kb->driver) { outb(0x20, 0x20); return; }
+		uint16_t ic = os_kb->poll_keyboard();
+		if(ic != 0) {
+			if((os_kb->left_control || os_kb->right_control) && os_kb->alt) {
+				switch(ic) {
+					case PS2_F1: { active_tty = &ttys[0]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F2: { active_tty = &ttys[1]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F3: { active_tty = &ttys[2]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F4: { active_tty = &ttys[3]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F5: { active_tty = &ttys[4]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F6: { active_tty = &ttys[5]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F7: { active_tty = &ttys[6]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F8: { active_tty = &ttys[7]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F9: { active_tty = &ttys[8]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F10: { active_tty = &ttys[9]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F11: { active_tty = &ttys[10]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+					case PS2_F12: { active_tty = &ttys[11]; active_tty->driver->flush(); outb(0x20, 0x20); return; }
+				}
+			}
+			char c = os_kb->get_char(ic);
+			if(ic == PS2_BACKSPACE) active_tty->ungetchar();
+			else if(c != 0) {
+				if(c == '\n') {
+					active_tty->last_stdin = false;
+					active_tty->stdin_removable = active_tty->stdin_pos + 1;
+				} else if(!active_tty->last_stdin) {
+					active_tty->last_stdin = true;
+					active_tty->stdin_removable = active_tty->stdin_pos;
+				}
+				active_tty->putchar(c);
+				active_tty->stdin_buf->push_back(c);
+			}
+		}
+		outb(0x20, 0x20);
+	}
+	__attribute__((interrupt)) void irq2(struct interrupt_frame* frame) { outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq3(struct interrupt_frame* frame) { outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq4(struct interrupt_frame* frame) { outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq5(struct interrupt_frame* frame) { outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq6(struct interrupt_frame* frame) { outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq7(struct interrupt_frame* frame) { outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq8(struct interrupt_frame* frame) { outb(0xA0, 0x20); outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq9(struct interrupt_frame* frame) { outb(0xA0, 0x20); outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq10(struct interrupt_frame* frame) { outb(0xA0, 0x20); outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq11(struct interrupt_frame* frame) { outb(0xA0, 0x20); outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq12(struct interrupt_frame* frame) { outb(0xA0, 0x20); outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq13(struct interrupt_frame* frame) { outb(0xA0, 0x20); outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq14(struct interrupt_frame* frame) { outb(0xA0, 0x20); outb(0x20, 0x20); }
+	__attribute__((interrupt)) void irq15(struct interrupt_frame* frame) { outb(0xA0, 0x20); outb(0x20, 0x20); }
 }

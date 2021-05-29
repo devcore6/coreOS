@@ -23,9 +23,6 @@ irq0:
 
 	pop ebx
 	pop eax
-
-	extern on_pit_tick
-	call on_pit_tick
 	iretd
 
 ;Input

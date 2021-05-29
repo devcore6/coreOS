@@ -32,10 +32,10 @@ static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
 static inline uint16_t vga_entry(unsigned char uc, uint8_t color) {
 	return (uint16_t) uc | (uint16_t) color << 8;
 }
-extern void enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
-extern void disable_cursor();
-extern void update_cursor(int x, int y);
-extern void update_cursor_auto();
+extern void vga_enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
+extern void vga_disable_cursor();
+extern void vga_update_cursor(int x, int y);
+extern void vga_update_cursor_auto();
 extern void vga_initialize();
 extern void vga_putentryat(unsigned char c, uint8_t color, size_t x, size_t y);
 extern void vga_putchar(char c);
@@ -43,7 +43,7 @@ extern void vga_write(const char* data, size_t size);
 extern void vga_writestring(const char* data);
 extern void vga_linebreak();
 extern void vga_removeentry();
-extern void vga_setbuf(const char *buf);
+extern void vga_setbuf(const char* buf);
 
 # ifdef __cplusplus
 }

@@ -34,7 +34,6 @@ $(KERNEL_ARCH_OBJS) \
 $(DRIVER_OBJS) \
 $(DRIVER_ARCH_OBJS) \
 kernel/kernel.o \
-kernel/find_keyboard.o \
 kernel/stdio.o \
 
 OBJS=$(KERNEL_OBJS) \

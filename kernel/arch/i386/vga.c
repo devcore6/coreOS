@@ -15,7 +15,7 @@ static size_t vga_column;
 static uint8_t vga_color;
 static uint16_t* vga_buffer;
 
-void enable_cursor(uint8_t cursor_start, uint8_t cursor_end) {
+void vga_enable_cursor(uint8_t cursor_start, uint8_t cursor_end) {
 	outb(0x3D4, 0x0A);
 	outb(0x3D5, (inb(0x3D5) & 0xC0) | cursor_start);
  
@@ -23,12 +23,12 @@ void enable_cursor(uint8_t cursor_start, uint8_t cursor_end) {
 	outb(0x3D5, (inb(0x3D5) & 0xE0) | cursor_end);
 }
 
-void disable_cursor() {
+void vga_disable_cursor() {
 	outb(0x3D4, 0x0A);
 	outb(0x3D5, 0x20);
 }
 
-void update_cursor(int x, int y) {
+void vga_update_cursor(int x, int y) {
 	uint16_t pos = y * VGA_WIDTH + x;
  
 	outb(0x3D4, 0x0F);
@@ -37,7 +37,7 @@ void update_cursor(int x, int y) {
 	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
 
-void update_cursor_auto() {
+void vga_update_cursor_auto() {
 	uint16_t pos = vga_row * VGA_WIDTH + vga_column;
  
 	outb(0x3D4, 0x0F);
@@ -89,7 +89,7 @@ void vga_putchar(char c) {
 		if(++vga_row == VGA_HEIGHT)
 			vga_scroll();
 	}
-	update_cursor_auto();
+	vga_update_cursor_auto();
 }
 
 void vga_write(const char* data, size_t size) {
@@ -105,7 +105,7 @@ void vga_linebreak() {
 	vga_column = 0;
 	if(++vga_row == VGA_HEIGHT)
 		vga_scroll();
-	update_cursor_auto();
+	vga_update_cursor_auto();
 }
 
 void vga_removeentry() {
@@ -113,7 +113,7 @@ void vga_removeentry() {
 	vga_column--;
 	vga_putchar(' ');
 	vga_column--;
-	update_cursor_auto();
+	vga_update_cursor_auto();
 }
 
 void vga_setbuf(const char *buf) {

@@ -16,7 +16,9 @@ public:
 			if(val & 0x01) {
 				val = inb(0x60);
 				if(val == PS2_EXTENDED) {
-					val = inl(0x60);
+					outb(0x64, 0xD2);
+					while(!(val & 0x01)) asm volatile("nop");
+					val = inb(0x60);
 				}
 				return val;
 			}
@@ -95,8 +97,8 @@ public:
 			case PS2_KP3: return numpad ? '3' : 0;
 			case PS2_KP0: return numpad ? '0' : 0;
 			case PS2_KPDOT: return numpad ? '.' : 0;
-			default: return 0;
 		}
+		return 0;
 	}
 	void update_lights(bool num_lock,
 					   bool caps_lock,
