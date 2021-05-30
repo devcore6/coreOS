@@ -1,13 +1,13 @@
 #include <stdint.h>
 
 struct tss_t {
-	uint16_t link;			uint16_t reserved00;
+	uint32_t link;
 	uint32_t esp0;
-	uint16_t ss0;			uint16_t reserved01;
+	uint32_t ss0;
 	uint32_t esp1;
-	uint16_t ss1;			uint16_t reserved02;
+	uint32_t ss1;
 	uint32_t esp2;
-	uint16_t ss2;			uint16_t reserved03;
+	uint32_t ss2;
 	uint32_t cr3;
 	uint32_t eip;
 	uint32_t eflags;
@@ -19,12 +19,12 @@ struct tss_t {
 	uint32_t ebp;
 	uint32_t esi;
 	uint32_t edi;
-	uint16_t es;			uint16_t reserved04;
-	uint16_t cs;			uint16_t reserved05;
-	uint16_t ss;			uint16_t reserved06;
-	uint16_t ds;			uint16_t reserved07;
-	uint16_t fs;			uint16_t reserved08;
-	uint16_t gs;			uint16_t reserved09;
-	uint16_t ldtr;			uint16_t reserved10;
-	uint16_t reserved11;	uint16_t iopb;
-};
+	uint32_t es;
+	uint32_t cs;
+	uint32_t ss;
+	uint32_t ds;
+	uint32_t fs;
+	uint32_t gs;
+	uint32_t ldtr;
+	uint16_t iopb; uint16_t reserved;
+} __attribute__((packed));

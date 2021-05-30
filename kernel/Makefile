@@ -13,7 +13,7 @@ EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
-CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra
+CFLAGS:=$(CFLAGS) -ffreestanding -Wall
 CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -fno-exceptions -fno-rtti -fno-use-cxa-atexit -D_ARCH_$(HOSTARCH)
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lkpp -lgcc
@@ -33,8 +33,12 @@ KERNEL_OBJS=\
 $(KERNEL_ARCH_OBJS) \
 $(DRIVER_OBJS) \
 $(DRIVER_ARCH_OBJS) \
+kernel/pthread/pthread_create.o \
+kernel/pthread/pthread_self.o \
+kernel/pthread/pthread_exit.o \
 kernel/kernel.o \
 kernel/stdio.o \
+kernel/scheduler.o \
 
 OBJS=$(KERNEL_OBJS) \
 

@@ -23,7 +23,6 @@ extern "C" {
 
 	__attribute__((interrupt)) void double_fault(struct interrupt_frame* frame) {
 		if(__this_thread == nullptr) { // double fault in kernel
-			vga_initialize();
 			uint32_t eax, ebx, ecx, edx, esi, edi, esp, ebp, cr0, cr2, cr3, cr4;
 			asm("movl %%eax, %[a1] ;"
 				"movl %%ebx, %[b1] ;"
@@ -60,7 +59,6 @@ extern "C" {
 
 	__attribute__((interrupt)) void protection_fault(struct interrupt_frame* frame) {
 		if(__this_thread == nullptr) { // protection fault in kernel
-			vga_initialize();
 			uint32_t eax, ebx, ecx, edx, esi, edi, esp, ebp, cr0, cr2, cr3, cr4;
 			asm("movl %%eax, %[a1] ;"
 				"movl %%ebx, %[b1] ;"
@@ -97,7 +95,6 @@ extern "C" {
 
 	__attribute__((interrupt)) void page_fault(struct interrupt_frame* frame) {
 		if(__this_thread == nullptr) { // page fault in kernel
-			vga_initialize();
 			uint32_t eax, ebx, ecx, edx, esi, edi, esp, ebp, cr0, cr2, cr3, cr4;
 			asm("movl %%eax, %[a1] ;"
 				"movl %%ebx, %[b1] ;"

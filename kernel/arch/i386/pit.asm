@@ -23,6 +23,7 @@ irq0:
 
 	pop ebx
 	pop eax
+
 	iretd
 
 ;Input
