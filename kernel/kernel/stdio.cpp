@@ -114,7 +114,8 @@ extern "C" void _kprint(char *str) {
 
 extern "C" bool _kprints(const char *str, size_t len) {
 	if(!active_tty) return false;
-	return active_tty->print_s(str, len);
+	active_tty->print_s(str, len);
+	return true;
 }
 
 extern "C" void _kerror(char *str) {
@@ -124,5 +125,6 @@ extern "C" void _kerror(char *str) {
 
 extern "C" bool _kerrors(const char *str, size_t len) {
 	if(!active_tty) return false;
-	return active_tty->stderr_s(str, len);
+	active_tty->stderr_s(str, len);
+	return true;
 }
