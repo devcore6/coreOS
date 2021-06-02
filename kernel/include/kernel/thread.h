@@ -3,6 +3,7 @@
 # include <stddef.h>
 # include <stdint.h>
 # include <pthread.h>
+# include <kernel/arch/i386/pit.h>
 # ifdef __cplusplus
 extern "C" {
 # endif
@@ -27,19 +28,14 @@ struct _thread_t {
 extern _thread_t* __this_thread;
 extern _thread_t** _threads;
 
-#define _yield() if(__this_thread) { \
-	pthread_t __pid = pthread_self() + 1; \
-	for(; __pid < 65536; __pid++) { \
-		if(!_threads[__pid]) continue; \
-		if(_threads[__pid]->sleep_until > system_timer_ms) continue; \
-		break; \
-	} \
-	if(__pid == 65536) for(__pid = 1; __pid < pthread_self(); __pid++) { \
-		if(!_threads[__pid]) continue; \
-		if(_threads[__pid]->sleep_until > system_timer_ms) continue; \
-		break; \
-	} \
-	if(__pid != pthread_self()) _load(__pid); \
+extern uint32_t last_yield;
+constexpr uint32_t yield_time = 2;
+
+inline void _yield() {
+	if(system_timer_ms <= last_yield + yield_time) return;
+	last_yield = system_timer_ms;
+	asm volatile("int $0x79;"
+				 "sti;");
 }
 
 extern void _load(pthread_t pid);

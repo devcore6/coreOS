@@ -6,24 +6,25 @@ system_timer_ms:        resd 1          ; Number of whole ms since timer initial
 irq0_fractions:          resd 1          ; Fractions of 1 ms between IRQs
 irq0_ms:                 resd 1          ; Number of whole ms between IRQs
 irq0_frequency:          resd 1          ; Actual frequency of PIT
-pit_reload_value:        resw 1          ; Current PIT reload value
+pit_reload_value:        resw 1          ; Current PIT reload value]
 section .text
+
 global irq0
 irq0:
 	push eax
 	push ebx
 
+	; Update internal timer
+
 	mov eax, [irq0_fractions]
 	mov ebx, [irq0_ms]                    ; eax.ebx = amount of time between IRQs
 	add [system_timer_fractions], eax     ; Update system timer tick fractions
 	adc [system_timer_ms], ebx            ; Update system timer tick milli-seconds
-
 	mov al, 0x20
-	out 0x20, al                          ; Send the EOI to the PIC
-
+	out 0x20, al
 	pop ebx
 	pop eax
-
+	;int 0x79								; For some reason this crashes
 	iretd
 
 ;Input

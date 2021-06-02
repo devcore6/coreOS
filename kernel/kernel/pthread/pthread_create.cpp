@@ -20,12 +20,11 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
 	_threads[*thread]->stack = new char[0x4000];
 	_threads[*thread]->ebp = (uint32_t)_threads[*thread]->stack + 0x4000;
 	_threads[*thread]->esp = _threads[*thread]->ebp;
-	_threads[*thread]->fstate = new char[0x200];
-	_threads[*thread]->page_directory = new uint32_t[0x100000];
+	//_threads[*thread]->fstate = new char[0x200];
+	//_threads[*thread]->page_directory = new uint32_t[0x100000];
 	_threads[*thread]->start_routine = start_routine;
 	_threads[*thread]->arg = arg;
 
-	asm volatile("cli");									// Most definitely should disable interrupts here
 	if(!__this_thread) goto run;
 	asm volatile goto("movl %%ebp, %0;" 					// Save base pointer
 					  "movl %%esp, %1;"						// Save stack pointer
@@ -47,6 +46,7 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
 					  : jump); 
 
 // will run on parent thread when resuming
+	asm volatile("sti");
 	return 0;
 jump:
 	asm volatile("popl %0;"									// Pull return address from stack
@@ -64,17 +64,17 @@ run:
 				 "movl %%cr0, %%eax;"						// Copy %cr0 onto %eax
 				 "orl %%eax, 8;"							// Set task switch flag
 				 "movl %%eax, %%cr0;"						// Save new %cr0
-				 "pushfl;"									// Temporarily push %flags register
-				 "popl %%eax;"								// Pop it on %eax
-				 "orl %%eax, 0x4200;"						// Set new task flag
-				 "pushl %%eax;"								// Push it back on the stack
-				 "popfl;"									// And pop back onto %flags
+				 //"pushfl;"									// Temporarily push %flags register
+				 //"popl %%eax;"								// Pop it on %eax
+				 //"orl $0x4200, %%eax;"						// Set new task flag
+				 //"pushl %%eax;"								// Push it back on the stack
+				 //"popfl;"									// And pop back onto %flags
+				 "sti;"
 				 "popl %%eax;"								// Pop original %eax
 				 "pushl %2;"								// Push function parameter
 				 "pushfl;"									// Need %flags on stack
 				 "pushw %%cs;"								// This temporarily assumes the code segment remains the same
 				 "pushl %3;"								// Push address for iret
-				 "sti;"										// Re-enable interrupts
 				 "iret;"									// Should jump to subroutine and be interpreted as new task
 				 :
 				 : "m"(_threads[*thread]->ebp),
@@ -84,6 +84,7 @@ run:
 	__builtin_unreachable();								// Indicate to GCC that any code from here on is unreachable, 
 															// so it won't complain about the function not returning a value
 }
+
 #else
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
 				   void *(*start_routine) (void *), void *arg) {

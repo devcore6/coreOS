@@ -1,6 +1,6 @@
 #include <pthread.h>
 
-void pthread_exit(void *retval) [[noreturn]] {
+void [[noreturn]] pthread_exit(void *retval) {
 	// do stuff to actally exit
 	while(true) {
 		asm volatile("hlt");

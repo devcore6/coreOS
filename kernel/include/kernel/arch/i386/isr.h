@@ -35,6 +35,8 @@ extern "C" {
 	extern void irq14(struct interrupt_frame*);
 	extern void irq15(struct interrupt_frame*);
 
+	extern void intyield(struct interrupt_frame*);
+
 # ifdef __cplusplus
 }
 # endif
