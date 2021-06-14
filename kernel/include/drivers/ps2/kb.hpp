@@ -15,11 +15,11 @@ public:
 			val = inb(0x64);
 			if(val & 0x01) {
 				val = inb(0x60);
-				if(val == PS2_EXTENDED) {
+				/*if(val == PS2_EXTENDED) {
 					outb(0x64, 0xD2);
 					while(!(val & 0x01)) asm volatile("nop");
 					val = inb(0x60);
-				}
+				}*/
 				return val;
 			}
 		}

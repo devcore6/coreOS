@@ -2,7 +2,7 @@
 #include <kernel/arch/i386/isr.h>
 #include <kernel/arch/i386/io.h>
 
-extern "C" void idt_init(void) {
+extern "C" void idt_init() {
 	unsigned long divide_by_zero_address;
 	unsigned long double_fault_address;
 	unsigned long protection_fault_address;
@@ -187,10 +187,10 @@ extern "C" void idt_init(void) {
 	IDT[0x79].offset_higherbits = (intyield_address & 0xffff0000) >> 16;
 
 	/* fill the IDT descriptor */
-	idt_address = (unsigned long)IDT ;
+	idt_address = (unsigned long)IDT;
 	idt_ptr[0] = (sizeof (struct IDT_entry) * 256) + ((idt_address & 0xffff) << 16);
-	idt_ptr[1] = idt_address >> 16 ;
+	idt_ptr[1] = idt_address >> 16;
 
-	asm volatile ("lidt %0" : : "m"(idt_ptr));
+	asm volatile("lidt %0" : : "m"(idt_ptr));
 
 }

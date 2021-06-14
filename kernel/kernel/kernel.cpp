@@ -52,7 +52,7 @@ void deinit_stdio() {
 void *pthread_test(void *arg) {
 	while(true) {
 		printf("Greetings from PID %i!\n", pthread_self());
-		//_yield();
+		_yield();
 	}
 	__builtin_unreachable();
 }
@@ -63,7 +63,7 @@ void *pthread_test_master(void *arg) {
 	pthread_create(&pid, nullptr, pthread_test, nullptr);
 	while(true) {
 		printf("Greetings from PID %i!\n", pthread_self());
-		//_yield();
+		_yield();
 	}
 	__builtin_unreachable();
 }
